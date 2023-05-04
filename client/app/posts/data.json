@@ -1,0 +1,32 @@
+[{
+        "id": 1,
+        "title": "Noche de Reggaetón",
+        "description": "Ven a bailar al ritmo de los mejores DJ's de la ciudad y disfruta de una noche de reggaetón sin parar. ¡No te lo pierdas!",
+        "image": "/images/image1.jpg"
+
+    },
+    {
+        "id": 2,
+        "title": "Concierto de Arcangel",
+        "description": "El famoso cantante Arcangel llega a nuestra discoteca para hacerte vibrar con sus mejores éxitos. Compra tu entrada anticipada y asegura tu lugar en este concierto imperdible.",
+        "image": "/images/image2.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Noche Latina",
+        "description": "Baila al son de la salsa, el merengue y la bachata en nuestra noche latina. La mejor música para que disfrutes con tus amigos y vivas una noche llena de sabor y alegría.",
+        "image": "/images/image3.jpg"
+    },
+    {
+        "id": 4,
+        "title": "Fiesta de los 80's",
+        "description": "Si te encanta la música de los años 80, no te puedes perder esta fiesta. Ven vestido con tus mejores atuendos de la época y disfruta de una noche llena de hits de los 80's.",
+        "image": "/images/image1.jpg"
+    },
+    {
+        "id": 5,
+        "title": "Noche de electrónica",
+        "description": "Si eres amante de la música electrónica, esta noche es para ti. Los mejores DJ's del momento te harán vibrar con sus mezclas y te llevarán a un mundo de luces y sonidos.",
+        "image": "/images/image2.jpg"
+    }
+]

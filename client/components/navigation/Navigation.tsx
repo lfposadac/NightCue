@@ -8,12 +8,24 @@ const links: link[] = [
     route: '/'
   },
   {
+    label: 'Login',
+    route: '/login'
+  },
+  {
+    label: 'Register',
+    route: '/register'
+  },
+  {
     label: 'About',
     route: '/about'
   },
   {
     label: 'Post',
-    route: '/post'
+    route: '/posts'
+  },
+  {
+    label: 'Reserva',
+    route: '/reserva'
   }
 ]
 
@@ -23,7 +35,7 @@ export function Navigation () {
       <nav className={styles.nav}>
         <ul className={styles.navigation}>
           {links.map(({ label, route }) => (
-            <li key={route}>
+            <li className={styles.li} key={route}>
               <Link href={route}> {label} </Link>
             </li>
           ))}
