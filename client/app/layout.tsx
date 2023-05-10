@@ -1,5 +1,7 @@
+
 import { ReactNode } from 'react'
 import './../styles/globals.css'
+import Sidebar from '@/components/sidebar/Sidebar';
 import { Navigation } from '@/components/navigation/Navigation'
 import { font } from './font'
 
@@ -17,6 +19,7 @@ export default function RootLayout ({
   return (
     <html lang="en">
       <body>
+        <Sidebar />
         <Navigation />
         {children}
       </body>

@@ -1,0 +1,94 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #F0DFF4;
+    text-decoration: none;
+    /* Rosado neutro */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.heading {
+    color: #000;
+    /* Negro */
+}
+
+.table-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.table {
+    width: 80%;
+    color: #000;
+    /* Negro */
+    border: 1px solid #000;
+    /* Negro */
+}
+
+.table th {
+    background-color: #000;
+    /* Negro */
+    color: #F0DFF4;
+    /* Rosado neutro */
+}
+
+.table td {
+    background-color: #FFF;
+    /* Blanco */
+}
+
+.button {
+    background-color: #000;
+    /* Negro */
+    color: #F0DFF4;
+    /* Rosado neutro */
+    border: none;
+}
+
+.button:hover {
+    background-color: #F0DFF4;
+    /* Rosado neutro */
+    color: #000;
+    /* Negro */
+}
+
+.modal-content {
+    color: #000;
+    /* Negro */
+    background-color: #F0DFF4;
+    /* Rosado neutro */
+}
+
+.modal-container {
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #000;
+}
+
+.modal-header,
+.modal-footer {
+    border: none;
+}
+
+.save-button {
+    background-color: #000;
+    /* Negro */
+    color: #F0DFF4;
+    /* Rosado neutro */
+}
+
+.save-button:hover {
+    background-color: #F0DFF4;
+    /* Rosado neutro */
+    color: #000;
+    /* Negro */
+}
