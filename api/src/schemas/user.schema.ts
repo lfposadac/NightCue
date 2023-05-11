@@ -1,6 +1,6 @@
 import * as Joi from "joi";
 
-const id = Joi.number().integer().min(1);
+const id = Joi.string().min(24).max(24);
 const roleId = Joi.string().min(24).max(24);
 const name = Joi.string().min(3).max(100);
 const lastName = Joi.string().min(3).max(100);
@@ -44,6 +44,7 @@ export const updateUserSchema = Joi.object({
   status,
 });
 
-export const deleteUserSchema = Joi.object({
-  id: id.required(),
+export const queryUserSchema = Joi.object({
+  id,
+  roleId,
 });

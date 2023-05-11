@@ -9,7 +9,6 @@ import {
 class AccessService {
   async getAccess(where: QueryAccessDto = {}): Promise<AccessDocument[]> {
     try {
-      console.log(where);
       const accesses = await AccessModel.find(where);
       return accesses;
     } catch (e: any) {
