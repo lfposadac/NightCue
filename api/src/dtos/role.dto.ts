@@ -9,3 +9,16 @@ export class CreateRoleDto {
     this.access_ids = access_ids;
   }
 }
+
+export class QueryRoleDto {
+  constructor(public _id?: string) {}
+}
+
+export class UpdateRoleDto {
+  constructor(
+    public name?: string,
+    public description?: string,
+    public access_ids?: string[],
+    public status?: string
+  ) {}
+}

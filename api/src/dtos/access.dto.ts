@@ -7,3 +7,15 @@ export class CreateAccessDto {
     this.description = description;
   }
 }
+
+export class UpdateAccessDto {
+  constructor(
+    public name?: string,
+    public description?: string,
+    public status?: boolean
+  ) {}
+}
+
+export class QueryAccessDto {
+  constructor(public _id?: string) {}
+}

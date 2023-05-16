@@ -1,6 +1,6 @@
 import * as Joi from "joi";
 
-const id = Joi.string().min(24).max(24);
+const id = Joi.number().integer().min(1);
 const roleId = Joi.string().min(24).max(24);
 const name = Joi.string().min(3).max(100);
 const lastName = Joi.string().min(3).max(100);
@@ -14,10 +14,6 @@ const lastSessionDate = Joi.date();
 const score = Joi.number().integer().min(0);
 const status = Joi.boolean();
 
-export const getUserSchema = Joi.object({
-  id: id.required(),
-});
-
 export const createUserSchema = Joi.object({
   roleId: roleId.required(),
   name: name.required(),
@@ -29,22 +25,7 @@ export const createUserSchema = Joi.object({
   address: address,
 });
 
-export const updateUserSchema = Joi.object({
-  roleId,
-  name,
-  lastName,
-  password,
-  email,
-  cellphone,
-  phone,
-  address,
-  urlProfilePhoto,
-  lastSessionDate,
-  score,
-  status,
-});
-
-export const queryUserSchema = Joi.object({
-  id,
-  roleId,
-});
+export const signInSchema = Joi.object({
+    email: email.required(),
+    password: password.required(),
+})
