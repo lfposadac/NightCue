@@ -1,10 +1,17 @@
 /* styles/navigation.css */
 
 .header {
-    height: 40px;
-    width: 750px;
-    background-color: rgb(0, 0, 0);
+    height: 50px;
+    /* aumenta la altura un poco para que los botones tengan más espacio */
+    width: 100%;
+    /* usa el 100% para que cubra toda la anchura */
     color: rgb(255, 255, 255);
+    display: flex;
+    /* agrega flex para centrar el .nav */
+    justify-content: center;
+    /* centra el .nav */
+    align-items: center;
+    /* centra verticalmente los elementos del .nav */
 }
 
 .nav {
@@ -31,7 +38,11 @@
     font-size: 1.2rem;
     font-weight: bold;
     padding: 0.5rem 1rem;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
+    border-radius: 20px;
+    /* agrega border-radius para redondear los botones */
+    background-color: rgba(20, 20, 20, 0.8);
+    /* agrega un color de fondo ligeramente más oscuro con algo de transparencia */
 }
 
 .navigation a:hover {

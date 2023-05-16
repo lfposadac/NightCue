@@ -21,11 +21,9 @@
 /* Establecer los estilos de color oscuro para la página */
 
 body {
+    background-image: url("/images/fondo2.jpg");
+    background-repeat: repeat;
     background-color: rgba(34, 34, 34, 0.7);
-    /* Color de fondo con opacidad */
-    background-image: url("/images/fondo3.jpeg");
-    background-repeat: no-repeat;
-    background-size: cover;
     color: var(--color-principal);
     padding: 100px;
     max-width: 800px;

@@ -1,0 +1,39 @@
+.welcomeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.welcomeTitle {
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 2px 2px 4px black;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.infoContainer {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.infoContainer h2 {
+    color: black;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.infoContainer p {
+    color: black;
+    font-size: 14px;
+}
+
+
+/* Agrega estilos para las barras de progreso de las estadísticas si lo deseas */
