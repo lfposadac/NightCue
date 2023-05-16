@@ -12,7 +12,7 @@ export const getPropiertySchema = Joi.object({
   id: id.required(),
 });
 
-export const paramsPropiertySchema = Joi.object({
+export const queryPropiertySchema = Joi.object({
   userId,
 });
 
@@ -23,4 +23,12 @@ export const createPropiertySchema = Joi.object({
   address: address.required(),
   contact: contact.required(),
   schedule: schedule.required(),
+});
+
+export const updatePropiertySchema = Joi.object({
+  name,
+  capacity,
+  address,
+  contact,
+  schedule,
 });
