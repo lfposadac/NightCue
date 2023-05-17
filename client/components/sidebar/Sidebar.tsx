@@ -30,7 +30,13 @@ export default function Sidebar() {
               <Link href="/global/propierty">Propiedades</Link>
             </li>
             <li>
-              <Link href="/">IR A PAG PRINCIPAL</Link>
+              <Link href="/global/tables">Tables</Link>
+            </li>
+            <li>
+              <Link href="/global/bookings">Bookings</Link>
+            </li>
+            <li>
+              <Link href="/">IR A LA ROMANA</Link>
             </li>
           </ul>
         </aside>

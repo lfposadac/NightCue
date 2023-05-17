@@ -26,34 +26,35 @@ type Propierty = {
 };
 
 const Propierty = () => {
-  const [propierties, setPropierties] = useState<Propierty[]>([]);
+  const [propierties, setPropiertys] = useState<Propierty[]>([]);
   const [modal, setModal] = useState(false);
-  const [selectedPropierty, setSelectedPropierty] = useState<Propierty | null>(
-    null
-  );
+  const [selectedPropierty, setSelectedPropierty] = useState<Propierty | null>(null);
+  const [editedPropierty, setEditedPropierty] = useState<Propierty | null>(null);
 
-  const toggleModal = () => setModal(!modal);
+
+  const toggle = () => setModal(!modal);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/propierty")
       .then((response) => response.json())
-      .then((data) => setPropierties(data.data));
+      .then((data) => setPropiertys(data.data));
   }, []);
 
   const handleEdit = (propierty: Propierty) => {
     setSelectedPropierty(propierty);
-    toggleModal();
+    setEditedPropierty(propierty);
+    toggle();
   };
 
-  const handleDelete = (propiertyId: string) => {
-    fetch(`http://localhost:3000/api/v1/propierty/${propiertyId}`, {
+  const handleDelete = (propierty: Propierty) => {
+    fetch(`http://localhost:3000/api/v1/propierty/${propierty._id}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          setPropierties(
-            propierties.filter((propierty) => propierty._id !== propiertyId)
+          setPropiertys(
+            propierties.filter((propierty) => propierty._id !== data.data._id)
           );
         }
       })
@@ -62,21 +63,51 @@ const Propierty = () => {
       });
   };
 
-  const handlePropiertyChange = (field: string, value: string) => {
-    if (selectedPropierty) {
-      setSelectedPropierty({ ...selectedPropierty, [field]: value });
+  const handlePropiertyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (editedPropierty) {
+      setEditedPropierty({ ...editedPropierty, [name]: value });
     }
   };
 
   const saveChanges = () => {
-    // Aquí irá la lógica para guardar los cambios en la base de datos
-    toggleModal();
+    if (selectedPropierty) {
+      const { _id, createdAt, updatedAt, __v, ...updatedPropierty } = editedPropierty; // Excluir las propiedades no permitidas
+
+      fetch(`http://localhost:3000/api/v1/propierty/${selectedPropierty._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPropierty), // Enviar el objeto actualizado sin las propiedades no permitidas
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.status === 200) {
+            setPropiertys((prevPropiertys) =>
+              prevPropiertys.map((propierty) =>
+                propierty._id === data.data._id ? data.data : propierty
+              )
+            );
+            toggle();
+          } else {
+            console.error("Error updating propierty:", data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating propierty:", error);
+        });
+    }
   };
 
   return (
     <DashboardLayout>
       <Container className={styles.container}>
         <h2 className={styles.heading}>Propierties</h2>
+        <p className={styles.subheading}>
+        Información sobre las propiedades registradas.
+        </p>
         <div className={styles.tableContainer}>
           <Table striped bordered hover className={styles.table}>
             <thead>
@@ -108,7 +139,7 @@ const Propierty = () => {
                       </Button>
                       <Button
                         variant="danger"
-                        onClick={() => handleDelete(propierty._id)}
+                        onClick={() => handleDelete(propierty)}
                         className={styles.button}
                       >
                         Eliminar
@@ -122,10 +153,10 @@ const Propierty = () => {
         </div>
         <Modal
           isOpen={modal}
-          toggle={toggleModal}
+          toggle={toggle}
           className={styles.modalContainer}
         >
-          <ModalHeader toggle={toggleModal}>Editar Propierty</ModalHeader>
+          <ModalHeader toggle={toggle}>Editar Propierty</ModalHeader>
           <ModalBody>
             <div className={styles.editContainer}>
               <FormGroup>
@@ -133,21 +164,17 @@ const Propierty = () => {
                 <Input
                   type="text"
                   name="name"
-                  value={selectedPropierty?.name || ""}
-                  onChange={(e) =>
-                    handlePropiertyChange("name", e.target.value)
-                  }
+                  value={editedPropierty?.name || ""}
+                  onChange={handlePropiertyChange}
                 />
               </FormGroup>
               <FormGroup>
                 <Label for="capacity">Capacity</Label>
                 <Input
-                  type="text"
+                  type="number"
                   name="capacity"
                   value={selectedPropierty?.capacity || ""}
-                  onChange={(e) =>
-                    handlePropiertyChange("capacity", e.target.value)
-                  }
+                  onChange={handlePropiertyChange}
                 />
               </FormGroup>
               <FormGroup>
@@ -156,9 +183,7 @@ const Propierty = () => {
                   type="text"
                   name="address"
                   value={selectedPropierty?.address || ""}
-                  onChange={(e) =>
-                    handlePropiertyChange("address", e.target.value)
-                  }
+                  onChange={handlePropiertyChange}
                 />
               </FormGroup>
               <FormGroup>
@@ -167,9 +192,7 @@ const Propierty = () => {
                   type="text"
                   name="contact"
                   value={selectedPropierty?.contact || ""}
-                  onChange={(e) =>
-                    handlePropiertyChange("contact", e.target.value)
-                  }
+                  onChange={handlePropiertyChange}
                 />
               </FormGroup>
               <FormGroup>
@@ -178,9 +201,7 @@ const Propierty = () => {
                   type="text"
                   name="schedule"
                   value={selectedPropierty?.schedule || ""}
-                  onChange={(e) =>
-                    handlePropiertyChange("schedule", e.target.value)
-                  }
+                  onChange={handlePropiertyChange}
                 />
               </FormGroup>
             </div>
@@ -195,7 +216,7 @@ const Propierty = () => {
             </Button>
             <Button
               color="secondary"
-              onClick={toggleModal}
+              onClick={toggle}
               className={styles.button}
             >
               Cancel
