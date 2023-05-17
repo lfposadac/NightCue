@@ -1,65 +1,60 @@
 :root {
-    --color-dark-principal: #222;
-    --color-principal: #fff;
-    --color-secundario: #aaa;
-    --color-destacado: #007bff;
-    /* color azul */
+  --color-dark-principal: #222;
+  --color-principal: #fff;
+  --color-secundario: #aaa;
+  --color-destacado: #007bff;
+  /* color azul */
 }
-
 
 /* Establecer los estilos iniciales para márgenes y rellenos */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 
 /* Establecer los estilos de color oscuro para la página */
 
 body {
-    background-color: rgba(34, 34, 34, 0.7);
-    /* Color de fondo con opacidad */
-    background-image: url("/images/fondo3.jpeg"), url("/images/logo.png");
-    background-repeat: no-repeat, no-repeat;
-    background-size: cover, auto;
-    background-position: center top, center center;
-    color: var(--color-principal);
-    padding: 100px;
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-color: rgba(34, 34, 34, 0.7);
+  /* Color de fondo con opacidad */
+  background-image: url("/images/fondo3.JPEG"), url("/images/logo.png");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, auto;
+  background-position: center top, center center;
+  color: var(--color-principal);
+  padding: 100px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .header {
-    background-image: url("/images/logo.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center top;
-    height: 100px;
+  background-image: url("/images/LOGO.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center top;
+  height: 100px;
 }
 
 html,
 body {
-    overflow-y: auto;
+  overflow-y: auto;
 }
-
 
 /* Eliminar la línea debajo de la etiqueta a */
 
 a {
-    text-decoration: none;
-    border-bottom: none;
+  text-decoration: none;
+  border-bottom: none;
 }
-
 
 /* Establecer el tamaño de fuente base para la página */
 
 html {
-    font-size: 16px;
+  font-size: 16px;
 }
-
 
 /* Establecer los estilos de los encabezados */
 
@@ -69,57 +64,51 @@ h3,
 h4,
 h5,
 h6 {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
 }
-
 
 /* Establecer los estilos de los párrafos */
 
 p {
-    margin-top: 0;
-    margin-bottom: 1em;
+  margin-top: 0;
+  margin-bottom: 1em;
 }
-
 
 /* Establecer los estilos de los elementos de lista */
 
 ul,
 ol {
-    margin-top: 0;
-    margin-bottom: 1em;
+  margin-top: 0;
+  margin-bottom: 1em;
 }
-
 
 /* Establecer los estilos de los elementos de lista */
 
 li {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
-
 
 /* Establecer los estilos de los enlaces */
 
 a {
-    color: var(--color-destacado);
+  color: var(--color-destacado);
 }
-
 
 /* Establecer los estilos de los botones */
 
 button {
-    padding: 0.5em 1em;
-    background-color: var(--color-destacado);
-    color: var(--color-principal);
-    border: none;
-    border-radius: 0.25em;
-    cursor: pointer;
+  padding: 0.5em 1em;
+  background-color: var(--color-destacado);
+  color: var(--color-principal);
+  border: none;
+  border-radius: 0.25em;
+  cursor: pointer;
 }
-
 
 /* Establecer los estilos de los botones al pasar el cursor sobre ellos */
 
 button:hover {
-    background-color: var(--color-azul);
+  background-color: var(--color-azul);
 }

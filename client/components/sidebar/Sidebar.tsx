@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import Link from "next/link";
 import styles from "./Sidebar.module.css";
 
@@ -13,19 +13,21 @@ export default function Sidebar() {
     <div>
       {isShown && (
         <aside className={styles.sidebar}>
-          <button onClick={toggleSidebar} className={styles.toggleButton}>Cerrar</button>
+          <button onClick={toggleSidebar} className={styles.toggleButton}>
+            Cerrar
+          </button>
           <ul className={styles.navigation}>
             <li>
-              <Link href="/owner/roles">Roles</Link>
+              <Link href="/global/roles">Roles</Link>
             </li>
             <li>
-              <Link href="/owner/access">Access</Link>
+              <Link href="/global/access">Access</Link>
             </li>
             <li>
-              <Link href="/owner/users">Usuarios</Link>
+              <Link href="/global/users">Usuarios</Link>
             </li>
             <li>
-              <Link href="/owner/propierty">Propiedades</Link>
+              <Link href="/global/propierty">Propiedades</Link>
             </li>
             <li>
               <Link href="/">IR A PAG PRINCIPAL</Link>
