@@ -22,9 +22,13 @@ export const signIn = () => {
         if (!isPasswordCorrect) {
           throw new Error("Password incorrect");
         }
-        const token = jwt.sign({ userId: user.id }, secretKey, {
-          expiresIn: "1h",
-        });
+        const token = jwt.sign(
+          { userId: user.id, roelId: user.roleId },
+          secretKey,
+          {
+            expiresIn: "1h",
+          }
+        );
         return res
           .status(200)
           .json({ message: "User logged", status: 200, data: { token } });
