@@ -6,9 +6,6 @@
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
-    max-width: 100000px;
-    /* Ajusta el valor según el ancho deseado */
-    margin: 0 auto;
 }
 
 .heading {
@@ -17,7 +14,7 @@
 }
 
 .table-container {
-    width: fit-content;
+    width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -25,7 +22,7 @@
 }
 
 .table {
-    width: 100%;
+    width: 90%;
     color: #000;
     border: 1px solid #000;
     font-family: Helvetica, Arial, sans-serif;

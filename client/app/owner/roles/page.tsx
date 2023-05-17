@@ -15,6 +15,7 @@ import {
 import styles from "./roles.module.css";
 
 type Role = {
+  _id: string;
   name: string;
   description: string;
 };
@@ -28,7 +29,7 @@ const Roles = () => {
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/v1/role?get=role")
+    fetch("http://localhost:3000/api/v1/role")
       .then((response) => response.json())
       .then((data) => {
         console.log(data);  // Agrega esta línea
@@ -44,12 +45,12 @@ const Roles = () => {
   };
 
   const handleDelete = (role: Role) => {
-    fetch(`http://localhost:3000/api/v1/role/${role.name}`, {
+    fetch(`http://localhost:3000/api/v1/role/${role._id}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
       .then((data) => {
-        setRoles(roles.filter((role) => role.name !== data.name));
+        setRoles(roles.filter((role) => role._id !== data.data._id));
       });
   };
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,24 +63,34 @@ const Roles = () => {
   const saveChanges = () => {
     console.log(selectedRole);
     if (selectedRole) {
-      fetch(`http://localhost:3000/api/v1/role/_id`, {
+      const { _id, createdAt, updatedAt, __v, ...updatedRole} = selectedRole; // Excluir las propiedades no permitidas
+      fetch(`http://localhost:3000/api/v1/role/${selectedRole._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(selectedRole),
+        body: JSON.stringify(updatedRole), // Enviar el objeto actualizado sin las propiedades no permitidas
       })
         .then((response) => response.json())
         .then((data) => {
-          setRoles((prevRoles) =>
-          prevRoles.map((role) =>
-            role.name === data.name ? data : role
-          )
-          );
-          toggle();
+          if (data.success) {
+            setRoles((prevRoles) =>
+              prevRoles.map((role) =>
+                role._id === data.data._id ? data.data : role
+              )
+            );
+            toggle();
+          } else {
+            console.error('Error updating role:', data.error);
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating role:', error);
         });
     }
   };
+  
+  
 
   return (
       <DashboardLayout>
@@ -96,7 +107,7 @@ const Roles = () => {
                 </tr>
               </thead>
               <tbody>
-                {roles.map((role) => (
+                {roles?.map((role) => (
                   <tr key={role.name}>
                     <td><strong>{role.name}</strong></td>
                     <td>{role.description}</td>

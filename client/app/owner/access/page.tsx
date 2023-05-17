@@ -14,6 +14,7 @@ import {
 import styles from "./access.module.css";
 
 type Access = {
+  _id: string;
   name: string;
   description: string;
 };

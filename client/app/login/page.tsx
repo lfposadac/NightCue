@@ -1,4 +1,5 @@
 "use client";
+import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { useState } from "react";
 import axios from "axios";
 import styles from "./Login.module.css";
@@ -35,33 +36,47 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.login}>
-      <div className={styles.formContainer}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <h2>LOGIN</h2>
-          <div className={styles.formControl}>
-            <label htmlFor="email">Email</label>
-            <input
-              name="email"
-              type="email"
-              placeholder="Enter email"
-              onChange={handleChange}
-            />
+    <DefaultLayout>
+      <div className={styles.login}>
+        <div className={styles.formContainer}>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <h2>LOGIN</h2>
+            <div className={styles.formControl}>
+              <label htmlFor="email">Email</label>
+              <input
+                name="email"
+                type="email"
+                placeholder="Enter email"
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.formControl}>
+              <label htmlFor="email">Password</label>
+              <input
+                name="password"
+                type="password"
+                placeholder="Enter password"
+                onChange={handleChange}
+              />
+            </div>
+            <button type="submit" className={styles.submitButton}>
+              login
+            </button>
+          </form>
+          <div className={styles.externalLogin}>
+            <a href="#">
+              <img src="/images/facebook-logo.png" alt="Facebook" />
+            </a>
+            <a href="#">
+              <img src="/images/google-logo.png" alt="Google" />
+            </a>
           </div>
-          <div className={styles.formControl}>
-            <label htmlFor="email">Password</label>
-            <input
-              name="password"
-              type="password"
-              placeholder="Enter password"
-              onChange={handleChange}
-            />
+          <div className={styles.registerLink}>
+            <p>No tienes una cuenta, <a href="#">REGISTRATE</a></p>
           </div>
-          <button type="submit" className={styles.submitButton}>
-            login
-          </button>
-        </form>
+        </div>
       </div>
-    </div>
+    </DefaultLayout>
   );
+  
 }

@@ -12,20 +12,16 @@ const links: link[] = [
     route: '/login'
   },
   {
-    label: 'Register',
-    route: '/register'
-  },
-  {
-    label: 'About',
-    route: '/about'
+    label: 'Reserva',
+    route: '/reserva'
   },
   {
     label: 'Post',
     route: '/posts'
   },
   {
-    label: 'Reserva',
-    route: '/reserva'
+    label: 'About',
+    route: '/about'
   }
 ]
 
