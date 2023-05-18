@@ -1,8 +1,10 @@
 "use client";
-import DefaultLayout from '@/components/layouts/DefaultLayout';
+
+import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { useState } from "react";
 import axios from "axios";
 import styles from "./Login.module.css";
+import { useRouter } from "next/router";
 
 export default function LoginPage() {
   const [credentials, setCredentials] = useState({
@@ -17,22 +19,26 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e) => {
-    // try {
     e.preventDefault();
-    console.log(credentials);
-    const res = await axios.post(
-      "http://localhost:3000/api/v1/auth/sign-in",
-      credentials
-    );
-    const { data, status } = res;
-    // If status > 400
-    if (status > 400) {
-      // alert de que no funciona
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/auth/sign-in",
+        credentials
+      );
+      const { data: dataRes } = res;
+      const { status, data } = dataRes;
+      if (status !== 200) {
+        alert("Correo o contraseña incorrectos");
+        return;
+      }
+      const { token } = data;
+      localStorage.setItem("token", token);
+
+      // Relocate to home page
+      window.location.href = "/";
+    } catch ({ response }) {
+      alert("Correo o contraseña incorrectos");
     }
-    //
-    // } catch (error) {
-    //   console.log('Error:', error.message)
-    // }
   };
 
   return (
@@ -72,11 +78,12 @@ export default function LoginPage() {
             </a>
           </div>
           <div className={styles.registerLink}>
-            <p>No tienes una cuenta, <a href="#">REGISTRATE</a></p>
+            <p>
+              No tienes una cuenta, <a href="#">REGISTRATE</a>
+            </p>
           </div>
         </div>
       </div>
     </DefaultLayout>
   );
-  
 }
