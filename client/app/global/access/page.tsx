@@ -23,7 +23,7 @@ const Access = () => {
   const [accesses, setAccesses] = useState<Access[]>([]);
   const [modal, setModal] = useState(false);
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null);
-
+  const [editedAccess, setEditedAccess] = useState<Access | null>(null);
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
@@ -57,11 +57,39 @@ const Access = () => {
       setSelectedAccess({ ...selectedAccess, [field]: value });
     }
   };
+  
 
   const saveChanges = () => {
-    // Aquí irá la lógica para guardar los cambios en la base de datos
-    toggle();
+    if (selectedAccess) {
+      const { _id, createdAt, updatedAt,status, __v, ...updatedAccess } = editedAccess;
+      fetch(`http://localhost:3000/api/v1/access/${selectedAccess._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedAccess),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.success) {
+            // Actualizar la lista de accesses con los cambios guardados
+            setAccesses((prevAccesses) =>
+              prevAccesses.map((access) =>
+                access._id === data.data._id ? data.data : access
+              )
+            );
+            toggle();
+          } else {
+            console.error('Error updating access:', data.error);
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating access:', error);
+        });
+    }
   };
+  
 
   return (
     <DashboardLayout>
@@ -86,7 +114,7 @@ const Access = () => {
                     <Button variant="warning" onClick={() => handleEdit(access)} className={styles.button}>
                       Editar
                     </Button>
-                    <Button variant="danger" onClick={() => handleDelete(access)} className={styles.button}>
+                    <Button variant="danger" onClick={() => handleDelete(access._id)} className={styles.button}>
                       Eliminar
                     </Button>
                   </div>
@@ -102,23 +130,21 @@ const Access = () => {
             <ModalBody>
               <div className={styles.editContainer}>
                 <FormGroup>
-                  <Label for="accessName" className={styles.editContainerLabel}>Name</Label>
+                  <Label for="accessName" >Name</Label>
                   <Input
                     type="text"
-                    name="accessName"
-                    value={selectedAccess?.name || ""}
-                    onChange={(e) => handleAccessChange("name", e.target.value)}
-                    className={styles.editContainerInput}
+                    name="Name"
+                    value={editedAccess?.name || ""}
+                    onChange={handleAccessChange}
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="accessDescription" className={styles.editContainerLabel}>Description</Label>
+                  <Label for="accessDescription" >Description</Label>
                   <Input
                     type="text"
-                    name="accessDescription"
-                    value={selectedAccess?.description || ""}
-                    onChange={(e) => handleAccessChange("description", e.target.value)}
-                    className={styles.editContainerTextarea}
+                    name="Description"
+                    value={editedAccess?.description || ""}
+                    onChange={handleAccessChange}
                   />
                 </FormGroup>
               </div>

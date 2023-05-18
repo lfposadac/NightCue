@@ -29,7 +29,9 @@ type Access = {
 
 const Roles = () => {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [access, setAccess] = useState({});
+  const [access, setAccess] = useState<Record<string, Access>>({});
+
+
   const [modal, setModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [editedRole, setEditedRole] = useState<Role | null>(null);
@@ -40,12 +42,15 @@ const Roles = () => {
     fetch("http://localhost:3000/api/v1/access")
       .then((response) => response.json())
       .then(({ data }) => {
-        data.forEach((element) => {
+        const accessObj: Record<string, Access> = {};
+        data.forEach((element: Access) => {
           const { _id, ...rest } = element;
-          setAccess((prevAccess) => ({ ...prevAccess, [_id]: rest }));
+          accessObj[_id] = rest;
         });
+        setAccess(accessObj);
       });
   }, []);
+  
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/role")
@@ -74,20 +79,35 @@ const Roles = () => {
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (editedRole) {
-      setEditedRole({ ...editedRole, [name]: value });
+      if (name === "access_ids") {
+        // Obtener los access_ids seleccionados
+        const selectedAccessIds = Array.from(
+          e.target.selectedOptions,
+          (option) => option.value
+        );
+        // Actualizar el arreglo de access_ids en el editedRole
+        setEditedRole({ ...editedRole, [name]: selectedAccessIds });
+      } else {
+        // Manejar los cambios en el nombre y la descripción
+        setEditedRole({ ...editedRole, [name]: value });
+      }
     }
   };
+  
+  
+  
+  
 
   const saveChanges = () => {
     if (selectedRole) {
-      const { _id, createdAt, updatedAt, __v, ...updatedRole } = editedRole; // Excluir las propiedades no permitidas
-
+      const { _id, createdAt, updatedAt, __v, ...updatedRole } = editedRole;
+  
       fetch(`http://localhost:3000/api/v1/role/${selectedRole._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedRole), // Enviar el objeto actualizado sin las propiedades no permitidas
+        body: JSON.stringify(updatedRole),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -108,6 +128,7 @@ const Roles = () => {
         });
     }
   };
+  
 
   return (
     <DashboardLayout>
@@ -185,6 +206,23 @@ const Roles = () => {
                   value={editedRole?.description || ""}
                   onChange={handleRoleChange}
                 />
+              </FormGroup>
+              <FormGroup>
+                <Label for="roleAccess">Accesos</Label>
+                <Input
+                  type="select"
+                  name="access_ids"
+                  multiple
+                  value={editedRole?.access_ids || []}
+                  onChange={handleRoleChange}
+                >
+                  {Object.keys(access).map((accessId) => (
+                    <option key={accessId} value={accessId}>
+                      {access[accessId].name}
+                    </option>
+                  ))}
+
+                </Input>
               </FormGroup>
             </div>
           </ModalBody>
