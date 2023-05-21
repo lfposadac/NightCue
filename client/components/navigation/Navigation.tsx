@@ -8,24 +8,48 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function Navigation() {
-  const [role, setRole] = useState([]);
+  const [roles, setRoles] = useState();
+  const [decodeToken, setDecodeToken] = useState(null);
   const token = localStorage.getItem("token");
 
-  if (token) {
+  if (token && !decodeToken) {
     const decodeToken = jwtDecode(token);
-    console.log(decodeToken?.roelId);
-    console.log(role?._id);
+    setDecodeToken(decodeToken);
   }
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+
+  useEffect(() => {
+    let role = null;
+    const roleId = decodeToken?.roelId;
+
+    roles?.forEach((e) => {
+      if (role) return;
+      role = e._id === roleId ? e : null;
+    });
+
+    switch (role?.name) {
+      case "Global User":
+        window.location.href = "/global";
+        break;
+
+      case "Owner Admin":
+        window.location.href = "/owner";
+        break;
+
+      default:
+        break;
+    }
+  }, [decodeToken, roles]);
 
   useEffect(() => {
     const getData = async () => {
       const { data } = await axios.get("http://localhost:3000/api/v1/role");
       const { data: dataRoles } = data;
-      dataRoles.forEach((element) => {
-        if (element.name === "Global User") {
-          setRole(element);
-        }
-      });
+      setRoles(dataRoles);
     };
     getData();
   }, []);
@@ -41,6 +65,13 @@ export function Navigation() {
               <Link href={route}> {label} </Link>
             </li>
           ))}
+          {token && (
+            <li className={styles.li}>
+              <a href="/" onClick={handleLogOut}>
+                Cerrar
+              </a>
+            </li>
+          )}
         </ul>
       </nav>
     </header>
