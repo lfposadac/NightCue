@@ -6,6 +6,7 @@ import AuthRoutes from "./auth.routes";
 import PropiertyRoutes from "./propierty.routes";
 import TableRoutes from "./tables.routes";
 import BookingRotes from "./booking.routes";
+import AlertRoutes from "./alert.routes";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/user", UserRoutes);
 router.use("/propierty", PropiertyRoutes);
 router.use("/table", TableRoutes);
 router.use("/booking", BookingRotes);
+router.use("/alert", AlertRoutes);
 
 export default router;
