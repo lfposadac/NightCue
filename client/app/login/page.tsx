@@ -56,7 +56,7 @@ export default function LoginPage() {
           break;
 
         default:
-          window.location.href = "/";
+          window.location.href = "/client";
           break;
       }
     } catch ({ response }) {

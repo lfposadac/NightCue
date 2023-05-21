@@ -18,7 +18,7 @@ export default function HamburgerButton() {
 
       {/* Menu mobile */}
       {isOpen && (
-        <div className="absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full bg-white md:hidden">
+        <div className="absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full bg-white md:hidden z-50">
           <nav className="flex flex-col items-center justify-center w-full h-full space-y-4">
             <Link href="/" className="text-gray-800 hover:text-gray-600">
               Inicio

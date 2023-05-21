@@ -1,3 +1,13 @@
+import CarouselCl from "@/components/client/Carousel";
+import Jumbotron from "@/components/client/Jumbotron";
+import Propierties from "@/components/client/Propierties";
+
 export default function Home() {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <>
+      <Jumbotron />
+      <CarouselCl />
+      <Propierties />
+    </>
+  );
 }
