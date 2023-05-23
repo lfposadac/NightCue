@@ -1,0 +1,15 @@
+.root-layout {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.logout-button {
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}

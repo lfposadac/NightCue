@@ -3,6 +3,7 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useState, useEffect } from "react";
 import { Container, Table, Button } from "react-bootstrap";
+import bookingImage from '../../../public/images/icon-booking.png';
 import {
   Modal,
   ModalHeader,
@@ -97,15 +98,16 @@ const Bookings = () => {
   return (
     <DashboardLayout>
       <Container className={styles.container}>
-        <h2 className={styles.heading}>Bookings</h2>
+        <img src={bookingImage.src} alt="Reservas" className={styles.image} />
+        <h2 className={styles.heading}>Reservas</h2>
         <p className={styles.subheading}>
-          Información sobre los bookings del sistema. Donde podrás eliminar y
+          Información sobre las Reservas del sistema. Donde podrás eliminar y
           editarlos.
         </p>
         <div className={styles.bookingContainer}>
-          <Table striped bordered hover className={styles.booking}>
+          <Table striped bordered hover className={styles.table}>
             <thead>
-              <tr>
+              <tr className={styles.tr}>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Accesos</th>
@@ -114,7 +116,7 @@ const Bookings = () => {
             </thead>
             <tbody>
               {bookings?.map((booking) => (
-                <tr key={booking.name}>
+                <tr key={booking.name} className={styles.tr}>
                   <td>
                     <strong>{booking.name}</strong>
                   </td>
@@ -128,6 +130,51 @@ const Bookings = () => {
                       >
                         Editar
                       </Button>
+                      <Modal isOpen={modal} toggle={toggle} className={styles.modal}>
+                        <div className={styles.overlay}>
+                          <div className={styles.editContainer}>
+                            <ModalHeader toggle={toggle} className={styles.modalheader}>EDITAR RESERVA</ModalHeader>
+                            <ModalBody>
+                              <div className={styles.formContainer}>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="bookingName">Nombre</Label>
+                                  <Input
+                                    type="text"
+                                    name="name"
+                                    value={editedBooking?.name || ""}
+                                    onChange={handleBookingChange}
+                                  />
+                                </FormGroup>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="bookingDescription">Descripción</Label>
+                                  <Input
+                                    type="textarea"
+                                    name="description"
+                                    value={editedBooking?.description || ""}
+                                    onChange={handleBookingChange}
+                                  />
+                                </FormGroup>
+                              </div>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="primary"
+                                onClick={saveChanges}
+                                className={styles.button}
+                              >
+                                Guardar Cambios
+                              </Button>
+                              <Button
+                                color="secondary"
+                                onClick={toggle}
+                                className={styles.button}
+                              >
+                                Cancelar
+                              </Button>
+                            </ModalFooter>
+                          </div>
+                        </div>
+                      </Modal>
                       <Button
                         variant="danger"
                         onClick={() => handleDelete(booking)}
@@ -142,47 +189,6 @@ const Bookings = () => {
             </tbody>
           </Table>
         </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Editar Rol</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-                <Label for="bookingName">Nombre</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={editedBooking?.name || ""}
-                  onChange={handleBookingChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="bookingDescription">Descripción</Label>
-                <Input
-                  type="textarea"
-                  name="description"
-                  value={editedBooking?.description || ""}
-                  onChange={handleBookingChange}
-                />
-              </FormGroup>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onClick={saveChanges}
-              className={styles.button}
-            >
-              Guardar Cambios
-            </Button>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              className={styles.button}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </Modal>
       </Container>
     </DashboardLayout>
   );
