@@ -33,7 +33,7 @@
 
 .navigation li a:hover {
     text-decoration: none;
-    background-color: #ff0000;
+    background-color: #008cff;
     color: #fff;
 }
 
@@ -65,7 +65,7 @@
 
 .toggleButton {
     background-color: #fff;
-    color: #ff0000;
+    color: #008cff;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;

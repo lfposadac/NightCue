@@ -8,13 +8,22 @@
 .welcomeTitle {
     text-transform: uppercase;
     color: white;
-    text-shadow: 2px 2px 4px black;
+    text-align: center;
+    text-shadow: 4px 4px 6px black;
 }
 
 .container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    /* Tres columnas de igual tamaño */
     gap: 20px;
+    width: 70%;
+}
+
+.imageContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
 }
 
 .infoContainer {
