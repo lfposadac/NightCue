@@ -27,32 +27,27 @@ export const linksWithToken: Link[] = [
     label: "Bookings",
     route: "/global/bookings",
   },
-  {
-    label: "IR A LA ROMANA",
-    route: "/",
-  },
-  
 ];
 
 export const links: Link[] = [
-    {
-        label: "Home",
-        route: "/",
-      },
-      {
-        label: "Login",
-        route: "/login",
-      },
-      {
-        label: "Reserva",
-        route: "/reserva",
-      },
-      {
-        label: "Post",
-        route: "/posts",
-      },
-      {
-        label: "About",
-        route: "/about",
-      },
-    ];
+  {
+    label: "Home",
+    route: "/",
+  },
+  {
+    label: "Login",
+    route: "/login",
+  },
+  {
+    label: "Reserva",
+    route: "/reserva",
+  },
+  {
+    label: "Post",
+    route: "/posts",
+  },
+  {
+    label: "About",
+    route: "/about",
+  },
+];

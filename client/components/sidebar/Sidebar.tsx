@@ -5,41 +5,24 @@ import Link from "next/link";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
 import styles from "./Sidebar.module.css";
-import { links, linksWithToken } from "./data";
+import { linksWithToken } from "./data";
 
 export default function Sidebar() {
   const [isShown, setIsShown] = useState(true); // comienza mostrándose
-  const [role, setRole] = useState([]);
-  const [currentPage, setCurrentPage] = useState('');
-  const token = localStorage.getItem("token");
+  const [currentPage, setCurrentPage] = useState("");
 
-  useEffect(() => {
-    if (token) {
-      const decodeToken = jwtDecode(token);
-
-      const getData = async () => {
-        const { data } = await axios.get("http://localhost:3000/api/v1/role");
-        const { data: dataRoles } = data;
-        dataRoles.forEach((element) => {
-          if (element.name === "Global User") {
-            setRole(element);
-          }
-        });
-      };
-      getData();
-    }
-  }, [token]);
-
-  const currentLinks = token ? linksWithToken : links;
+  const currentLinks = linksWithToken;
 
   const toggleSidebar = () => {
     setIsShown(!isShown); // cambia el estado cada vez que se hace clic
   };
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setCurrentPage('');
-    // Lógica adicional de logout (por ejemplo, redireccionar al usuario a la página de inicio de sesión)
+    localStorage.removeItem("token");
+    setCurrentPage("");
+    window.location.href = "/";
   };
+
   return (
     <div>
       {isShown && (
@@ -61,7 +44,7 @@ export default function Sidebar() {
           </button>
         </aside>
       )}
-      {!isShown && currentPage === '' && (
+      {!isShown && currentPage === "" && (
         <button onClick={toggleSidebar} className={styles.hamburgerButton}>
           <div></div>
           <div></div>
