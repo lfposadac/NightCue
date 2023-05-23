@@ -56,7 +56,7 @@ export default function RootLayout({
 
   return (
     <>
-    {/* <Validation /> */}
+     <Validation /> 
       <style jsx global>{`
         body {
           margin: 0;
