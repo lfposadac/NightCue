@@ -117,6 +117,7 @@ const Bookings = () => {
               )
             );
             setModalOpen(false);
+            setError(null); // Limpiar el error
           } else {
             console.error("Error updating booking:", data.error);
             setError("Error al actualizar la reserva");
@@ -148,7 +149,7 @@ const Bookings = () => {
           </Typography>
         </Box>
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
@@ -249,6 +250,7 @@ const Bookings = () => {
 };
 
 export default Bookings;
+
 
 
 
