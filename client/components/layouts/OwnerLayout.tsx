@@ -3,6 +3,7 @@ import { Paper, Typography, Backdrop } from '@mui/material';
 import Sidebar from '@/components/sidebarOwner/Sidebar';
 import Image from 'next/image';
 import './../../styles/globalsOwner.css'
+import Validation from '../owner/validation';
 
 export const metadata = {
   title: 'Create Next App',
@@ -55,6 +56,7 @@ export default function RootLayout({
 
   return (
     <>
+    {/* <Validation /> */}
       <style jsx global>{`
         body {
           margin: 0;

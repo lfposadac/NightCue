@@ -1,48 +1,60 @@
 "use client";
-import OwnerLayout from "@/components/layouts/OwnerLayout";
 import React, { useState, useEffect } from "react";
-import { Container, Table, Button } from "react-bootstrap";
+import OwnerLayout from "@/components/layouts/OwnerLayout";
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
-import styles from "./booking.module.css";
-import internal from "stream";
+  Container,
+  Table,
+  TableContainer,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Typography,
+  Box,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import Modal from "@mui/material/Modal";
+import FormGroup from "@mui/material/FormGroup";
+import TextField from "@mui/material/TextField";
+import { SelectChangeEvent } from "@mui/material/Select";
+import BookIcon from "@mui/icons-material/Book";
+import Alert from "@mui/material/Alert";
 
 type Booking = {
   _id: string;
   idTable: string;
   userId: string;
-  numberOfGuests: int;
-  
+  numberOfGuests: number;
+  status: "Espera" | "Rechazado" | "Aceptado";
 };
 
+type EditedBookings = Record<string, Partial<Booking>>;
 
 const Bookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [modal, setModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [editedBooking, setEditedBooking] = useState<Booking | null>(null);
-
-  const toggle = () => setModal(!modal);
+  const [editedBookings, setEditedBookings] = useState<EditedBookings>({});
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/booking")
       .then((response) => response.json())
       .then((data) => {
         setBookings(data.data);
+        const initialEditedBookings: EditedBookings = {};
+        data.data.forEach((booking: Booking) => {
+          initialEditedBookings[booking._id] = { ...booking };
+        });
+        setEditedBookings(initialEditedBookings);
       });
   }, []);
 
   const handleEdit = (booking: Booking) => {
     setSelectedBooking(booking);
-    setEditedBooking(booking);
-    toggle();
+    setModalOpen(true);
   };
 
   const handleDelete = (booking: Booking) => {
@@ -52,20 +64,42 @@ const Bookings = () => {
       .then((response) => response.json())
       .then((data) => {
         setBookings(bookings.filter((booking) => booking._id !== data.data._id));
+        setEditedBookings((prevEditedBookings) => {
+          const { [data.data._id]: deletedBooking, ...rest } = prevEditedBookings;
+          return rest;
+        });
       });
   };
 
-  const handleBookingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBookingChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    bookingId: string
+  ) => {
     const { name, value } = e.target;
-    if (editedBooking) {
-      setEditedBooking({ ...editedBooking, [name]: value });
-    }
+    setEditedBookings((prevEditedBookings) => ({
+      ...prevEditedBookings,
+      [bookingId]: { ...prevEditedBookings[bookingId], [name]: value },
+    }));
+  };
+
+  const handleStatusChange = (
+    e: SelectChangeEvent<"Espera" | "Rechazado" | "Aceptado">,
+    bookingId: string
+  ) => {
+    setEditedBookings((prevEditedBookings) => ({
+      ...prevEditedBookings,
+      [bookingId]: {
+        ...prevEditedBookings[bookingId],
+        status: e.target.value as "Espera" | "Rechazado" | "Aceptado",
+      },
+    }));
   };
 
   const saveChanges = () => {
     if (selectedBooking) {
-      const { _id, createdAt, updatedAt, __v, ...updatedBooking } = editedBooking; // Excluir las propiedades no permitidas
-
+      const { _id, createdAt, updatedAt, __v, ...updatedBooking } = editedBookings[
+        selectedBooking._id
+      ] as Booking; // Excluir las propiedades no permitidas
       fetch(`http://localhost:3000/api/v1/booking/${selectedBooking._id}`, {
         method: "PUT",
         headers: {
@@ -82,105 +116,132 @@ const Bookings = () => {
                 booking._id === data.data._id ? data.data : booking
               )
             );
-            toggle();
+            setModalOpen(false);
           } else {
             console.error("Error updating booking:", data.error);
+            setError("Error al actualizar la reserva");
           }
         })
         .catch((error) => {
           console.error("Error updating booking:", error);
+          setError("Error al actualizar la reserva");
         });
     }
   };
 
   return (
     <OwnerLayout>
-      <Container className={styles.container}>
-        <h2 className={styles.heading}>Bookings</h2>
-        <p className={styles.subheading}>
-          Información sobre los bookings del sistema. Donde podrás eliminar y
-          editarlos.
-        </p>
-        <div className={styles.bookingContainer}>
-          <Table striped bordered hover className={styles.booking}>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Accesos</th>
-                <th className={styles.actions}>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bookings?.map((booking) => (
-                <tr key={booking.name}>
-                  <td>
-                    <strong>{booking.name}</strong>
-                  </td>
-                  <td>{booking.description}</td>
-                  <td className={styles.actions}>
-                    <div className={styles.buttonContainer}>
-                      <Button
-                        variant="warning"
-                        onClick={() => handleEdit(booking)}
-                        className={styles.button}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleDelete(booking)}
-                        className={styles.button}
-                      >
-                        Eliminar
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
+      <Container>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "transparent",
+            py: 3,
+            mb: 3,
+          }}
+        >
+          <BookIcon sx={{ color: "white", mr: 1 }} />
+          <Typography variant="h4" component="h4" color="white">
+            Reservas
+          </Typography>
+        </Box>
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
+        <TableContainer sx={{ bgcolor: "white" }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>idTable</TableCell>
+                <TableCell>userId</TableCell>
+                <TableCell>numberOfGuests</TableCell>
+                <TableCell>status</TableCell>
+                <TableCell>Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bookings.map((booking) => (
+                <TableRow key={booking._id}>
+                  <TableCell>
+                    <strong>{booking.idTable}</strong>
+                  </TableCell>
+                  <TableCell>{booking.userId}</TableCell>
+                  <TableCell>{booking.numberOfGuests}</TableCell>
+                  <TableCell>
+                    <Select
+                      value={editedBookings[booking._id]?.status || ""}
+                      onChange={(e) => handleStatusChange(e, booking._id)}
+                      aria-label="booking status"
+                    >
+                      <MenuItem value="Espera">Espera</MenuItem>
+                      <MenuItem value="Rechazado">Rechazado</MenuItem>
+                      <MenuItem value="Aceptado">Aceptado</MenuItem>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="contained" onClick={() => handleEdit(booking)}>
+                      Editar
+                    </Button>
+                    <Button variant="contained" color="error" onClick={() => handleDelete(booking)}>
+                      Eliminar
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
+            </TableBody>
           </Table>
-        </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Editar Rol</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-                <Label for="bookingName">Nombre</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={editedBooking?.name || ""}
-                  onChange={handleBookingChange}
+        </TableContainer>
+        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <Box
+            sx={{
+              p: 2,
+              maxWidth: 400,
+              bgcolor: "white",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h5" component="h5" gutterBottom>
+              Editar Reserva
+            </Typography>
+            {selectedBooking && (
+              <FormGroup sx={{ width: "100%", mb: 2 }}>
+                <TextField
+                  name="idTable"
+                  label="idTable"
+                  value={editedBookings[selectedBooking._id]?.idTable || ""}
+                  onChange={(e) => handleBookingChange(e, selectedBooking._id)}
+                  fullWidth
+                  margin="dense"
+                  variant="outlined"
+                  autoFocus
+                />
+                <TextField
+                  name="numberOfGuests"
+                  label="Número de Invitados"
+                  type="number"
+                  value={editedBookings[selectedBooking._id]?.numberOfGuests || ""}
+                  onChange={(e) => handleBookingChange(e, selectedBooking._id)}
+                  fullWidth
+                  margin="dense"
+                  variant="outlined"
                 />
               </FormGroup>
-              <FormGroup>
-                <Label for="bookingDescription">Descripción</Label>
-                <Input
-                  type="textarea"
-                  name="description"
-                  value={editedBooking?.description || ""}
-                  onChange={handleBookingChange}
-                />
-              </FormGroup>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onClick={saveChanges}
-              className={styles.button}
-            >
-              Guardar Cambios
-            </Button>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              className={styles.button}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
+            )}
+            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+              <Button variant="contained" onClick={() => setModalOpen(false)}>
+                Cancelar
+              </Button>
+              <Button variant="contained" onClick={saveChanges}>
+                Guardar
+              </Button>
+            </Box>
+          </Box>
         </Modal>
       </Container>
     </OwnerLayout>
@@ -188,3 +249,36 @@ const Bookings = () => {
 };
 
 export default Bookings;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

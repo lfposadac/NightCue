@@ -1,37 +1,35 @@
 "use client";
 import OwnerLayout from "@/components/layouts/OwnerLayout";
-import React, { useState, useEffect } from "react";
-import { Container, Table, Button } from "react-bootstrap";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { Container, Table, Button } from "@mui/material";
 import {
   Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+  TextField,
+} from "@mui/material";
 import styles from "./table.module.css";
-import internal from "stream";
 
-type Table = {
-    _id: string;
-    idPropierty: string;
-    type: string;
-    capacity: int;
-    description: string;
-    ubication: string;
-    typesOfSeats: string;
-    reservationCost: int;
-    minimumConsumption: int;
+type TableData = {
+  _id: string;
+  idPropierty: string;
+  type: string;
+  capacity: number;
+  description: string;
+  ubication: string;
+  typesOfSeats: string;
+  reservationCost: number;
+  minimumConsumption: number;
 };
 
-
 const Tables = () => {
-  const [tables, setTables] = useState<Table[]>([]);
+  const [tables, setTables] = useState<TableData[]>([]);
   const [modal, setModal] = useState(false);
-  const [selectedTable, setSelectedTable] = useState<Table | null>(null);
-  const [editedTable, setEditedTable] = useState<Table | null>(null);
+  const [selectedTable, setSelectedTable] = useState<TableData | null>(null);
+  const [editedTable, setEditedTable] = useState<TableData | null>(null);
 
   const toggle = () => setModal(!modal);
 
@@ -43,13 +41,13 @@ const Tables = () => {
       });
   }, []);
 
-  const handleEdit = (table: Table) => {
+  const handleEdit = (table: TableData) => {
     setSelectedTable(table);
     setEditedTable(table);
     toggle();
   };
 
-  const handleDelete = (table: Table) => {
+  const handleDelete = (table: TableData) => {
     fetch(`http://localhost:3000/api/v1/table/${table._id}`, {
       method: "DELETE",
     })
@@ -59,7 +57,7 @@ const Tables = () => {
       });
   };
 
-  const handleTableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTableChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (editedTable) {
       setEditedTable({ ...editedTable, [name]: value });
@@ -68,7 +66,14 @@ const Tables = () => {
 
   const saveChanges = () => {
     if (selectedTable && editedTable) {
-      const { _id, createdAt, updatedAt, __v, idPropierty, ...updatedTable } = editedTable; // Excluir las propiedades no permitidas
+      const {
+        _id,
+        createdAt,
+        updatedAt,
+        __v,
+        idPropierty,
+        ...updatedTable
+      } = editedTable; // Excluir las propiedades no permitidas
       fetch(`http://localhost:3000/api/v1/table/${selectedTable._id}`, {
         method: "PUT",
         headers: {
@@ -99,147 +104,111 @@ const Tables = () => {
   return (
     <OwnerLayout>
       <Container className={styles.container}>
-        <h2 className={styles.heading}>Tables</h2>
-        <p className={styles.subheading}>
-          Información sobre los tables del sistema. Donde podrás eliminar y
-          editarlos.
-        </p>
-        <div className={styles.tableContainer}>
-          <Table striped bordered hover className={styles.table}>
-            <thead>
-              <tr>
-              <th>Tipo</th>
-              <th>Capacidad</th>
-              <th>Descripción</th>
-              <th>Ubicación</th>
-              <th>Tipo de Asientos</th>
-              <th>Costo de Reserva</th>
-              <th>Consumo Mínimo</th>
-              <th className={styles.actions}>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tables?.map((table) => (
-                <tr key={table._id}>
-                  <td>{table.type}</td>
-                  <td>{table.capacity}</td>
-                  <td>{table.description}</td>
-                  <td>{table.ubication}</td>
-                  <td>{table.typesOfSeats}</td>
-                  <td>{table.reservationCost}</td>
-                  <td>{table.minimumConsumption}</td>
-                  <td className={styles.actions}>
-                    <div className={styles.buttonContainer}>
-                      <Button
-                        variant="warning"
-                        onClick={() => handleEdit(table)}
-                        className={styles.button}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleDelete(table)}
-                        className={styles.button}
-                      >
-                        Eliminar
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Editar Rol</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-              <Label for="tableType">Tipo</Label>
-              <Input
-                type="text"
+        <Typography variant="h4">Mesas</Typography>
+        <Button onClick={toggle} variant="contained" color="primary">
+          Agregar Mesa
+        </Button>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Tipo</TableCell>
+              <TableCell>Capacidad</TableCell>
+              <TableCell>Descripción</TableCell>
+              <TableCell>Ubicación</TableCell>
+              <TableCell>Tipos de Asientos</TableCell>
+              <TableCell>Costo de Reservación</TableCell>
+              <TableCell>Consumo Mínimo</TableCell>
+              <TableCell>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tables.map((table) => (
+              <TableRow key={table._id}>
+                <TableCell>{table._id}</TableCell>
+                <TableCell>{table.type}</TableCell>
+                <TableCell>{table.capacity}</TableCell>
+                <TableCell>{table.description}</TableCell>
+                <TableCell>{table.ubication}</TableCell>
+                <TableCell>{table.typesOfSeats}</TableCell>
+                <TableCell>{table.reservationCost}</TableCell>
+                <TableCell>{table.minimumConsumption}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleEdit(table)}>Editar</Button>
+                  <Button onClick={() => handleDelete(table)}>Eliminar</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Container>
+
+      {/* Modal de edición */}
+      <Modal open={modal} onClose={toggle}>
+        <div className={styles.modal}>
+          <Typography variant="h5">Editar Mesa</Typography>
+          {selectedTable && (
+            <div className={styles.form}>
+              <TextField
+                label="Tipo"
                 name="type"
-                value={editedTable?.type || ""}
+                value={editedTable?.type}
                 onChange={handleTableChange}
               />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableCapacity">Capacidad</Label>
-                <Input
-                  type="number"
-                  name="capacity"
-                  value={editedTable?.capacity || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableDescription">Descripción</Label>
-                <Input
-                  type="textarea"
-                  name="description"
-                  value={editedTable?.description || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableUbication">Ubicación</Label>
-                <Input
-                  type="text"
-                  name="ubication"
-                  value={editedTable?.ubication || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableTypesOfSeats">Tipo de Asientos</Label>
-                <Input
-                  type="text"
-                  name="typesOfSeats"
-                  value={editedTable?.typesOfSeats || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableReservationCost">Costo de Reserva</Label>
-                <Input
-                  type="number"
-                  name="reservationCost"
-                  value={editedTable?.reservationCost || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableMinimumConsumption">Consumo Mínimo</Label>
-                <Input
-                  type="number"
-                  name="minimumConsumption"
-                  value={editedTable?.minimumConsumption || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
+              <TextField
+                label="Capacidad"
+                name="capacity"
+                type="number"
+                value={editedTable?.capacity}
+                onChange={handleTableChange}
+              />
+              <TextField
+                label="Descripción"
+                name="description"
+                value={editedTable?.description}
+                onChange={handleTableChange}
+              />
+              <TextField
+                label="Ubicación"
+                name="ubication"
+                value={editedTable?.ubication}
+                onChange={handleTableChange}
+              />
+              <TextField
+                label="Tipos de Asientos"
+                name="typesOfSeats"
+                value={editedTable?.typesOfSeats}
+                onChange={handleTableChange}
+              />
+              <TextField
+                label="Costo de Reservación"
+                name="reservationCost"
+                type="number"
+                value={editedTable?.reservationCost}
+                onChange={handleTableChange}
+              />
+              <TextField
+                label="Consumo Mínimo"
+                name="minimumConsumption"
+                type="number"
+                value={editedTable?.minimumConsumption}
+                onChange={handleTableChange}
+              />
             </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onClick={saveChanges}
-              className={styles.button}
-            >
-              Guardar Cambios
+          )}
+          <div className={styles.modalButtons}>
+            <Button onClick={saveChanges} variant="contained" color="primary">
+              Guardar
             </Button>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              className={styles.button}
-            >
+            <Button onClick={toggle} variant="contained" color="secondary">
               Cancelar
             </Button>
-          </ModalFooter>
-        </Modal>
-      </Container>
+          </div>
+        </div>
+      </Modal>
     </OwnerLayout>
   );
 };
 
 export default Tables;
+

@@ -1,15 +1,12 @@
 "use client"
 import React from 'react';
 import OwnerLayout from '@/components/layouts/OwnerLayout';
-import { Typography, Grid, useMediaQuery } from '@mui/material';
-import { styled, ThemeProvider } from '@mui/system';
-import Sidebar from '@/components/sidebarOwner/Sidebar';
+import { Typography, Grid, Box } from '@mui/material';
+import { styled } from '@mui/system';
 import ChairIcon from '@mui/icons-material/Chair';
 import BookIcon from '@mui/icons-material/Book';
 import HouseIcon from '@mui/icons-material/House';
-import { createTheme } from '@mui/material/styles';
-
-const theme = createTheme();
+import Link from 'next/link';
 
 const WelcomeContainer = styled('div')(({ theme }) => ({
   color: '#fff',
@@ -23,60 +20,70 @@ const InfoContainer = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   marginBottom: theme.spacing(2),
   textAlign: 'center',
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: '#444',
   borderRadius: theme.spacing(1),
+  },
 }));
 
-const ContentContainer = styled('div')(({ theme }) => ({
+const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  minHeight: '100vh', // Establece la altura mínima de la pantalla para centrar el contenido verticalmente
+  minHeight: '100vh',
 }));
 
 const Dashboard: React.FC = () => {
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   return (
-    <ThemeProvider theme={theme}>
-      <OwnerLayout>
-        <ContentContainer>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <WelcomeContainer>
-                <Typography variant={isSmallScreen ? 'h4' : 'h2'} style={{ backgroundColor: 'transparent' }}>
-                  BIENVENIDO AL PANEL DE OWNER
-                </Typography>
-              </WelcomeContainer>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+    <OwnerLayout>
+      <ContentContainer>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <WelcomeContainer>
+              <Typography variant="h2" style={{ backgroundColor: 'transparent' }}>
+                BIENVENIDO AL PANEL DE OWNER
+              </Typography>
+            </WelcomeContainer>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Link href="/owner/table" passHref>
               <InfoContainer>
                 <ChairIcon fontSize="large" />
-                <Typography variant={isSmallScreen ? 'h6' : 'h4'}>MESAS</Typography>
+                <Typography variant="h4">MESAS</Typography>
                 <Typography variant="body1">Información sobre las mesas en el sistema.</Typography>
               </InfoContainer>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Link href="/owner/booking" passHref>
               <InfoContainer>
                 <BookIcon fontSize="large" />
-                <Typography variant={isSmallScreen ? 'h6' : 'h4'}>RESERVAS</Typography>
+                <Typography variant="h4">RESERVAS</Typography>
                 <Typography variant="body1">Información sobre las reservas en el sistema.</Typography>
               </InfoContainer>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Link href="/owner/propierty" passHref>
               <InfoContainer>
                 <HouseIcon fontSize="large" />
-                <Typography variant={isSmallScreen ? 'h6' : 'h4'}>PROPIEDADES</Typography>
+                <Typography variant="h4">PROPIEDADES</Typography>
                 <Typography variant="body1">Información sobre las propiedades registradas.</Typography>
               </InfoContainer>
-            </Grid>
+            </Link>
           </Grid>
-        </ContentContainer>
-      </OwnerLayout>
-    </ThemeProvider>
+        </Grid>
+      </ContentContainer>
+    </OwnerLayout>
   );
 };
 
 export default Dashboard;
+
+
+
+
 
 
 

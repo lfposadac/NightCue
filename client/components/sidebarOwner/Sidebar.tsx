@@ -86,10 +86,23 @@ export default function Sidebar() {
               <ListItemText primary="Mesas" />
             </ListItem>
           </List>
+          <List>
+            <ListItem
+              button
+              component={Link}
+              href="/owner"
+              onClick={handleMenuItemClick}
+            >
+              <div>
+                <HomeIcon /> {/* Icono de libro */}
+              </div>
+              <ListItemText primary="Home" />
+            </ListItem>
+            </List>
           <ListItem
             button
             component={Link}
-            href="/owner"
+            href="/login"
             onClick={handleMenuItemClick}
           >
             <div>

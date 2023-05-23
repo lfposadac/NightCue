@@ -2,20 +2,24 @@
 import React, { useState, useEffect } from "react";
 import {
   Container,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
   Button,
   Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   FormGroup,
-  Label,
+  FormControl,
+  FormLabel,
   Input,
-} from "reactstrap";
-import { Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material"
-import styles from "./propierty.module.css";
-import OwnerLayout from "@/components/layouts/OwnerLayout";
+} from "@mui/material";
 
-type Propierty = {
+type Property = {
   _id: string;
   userId: string;
   name: string;
@@ -25,177 +29,207 @@ type Propierty = {
   schedule: string;
 };
 
-const Propierty = () => {
-  const [propierties, setPropiertys] = useState<Propierty[]>([]);
-  const [modal, setModal] = useState(false);
-  const [selectedPropierty, setSelectedPropierty] = useState<Propierty | null>(null);
-  const [editedPropierty, setEditedPropierty] = useState<Propierty | null>(null);
-
-  const toggle = () => setModal(!modal);
+const Property = () => {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [editedProperty, setEditedProperty] = useState<Property | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/v1/propierty")
-      .then((response) => response.json())
-      .then((data) => setPropiertys(data.data));
+    fetchProperties();
   }, []);
 
-  const handleEdit = (propierty: Propierty) => {
-    setSelectedPropierty(propierty);
-    setEditedPropierty(propierty);
-    toggle();
+  const fetchProperties = () => {
+    fetch("http://localhost:3000/api/v1/property")
+      .then((response) => response.json())
+      .then((data) => setProperties(data.data))
+      .catch((error) => {
+        console.error("Error fetching properties:", error);
+      });
   };
 
-  const handleDelete = (propierty: Propierty) => {
-    fetch(`http://localhost:3000/api/v1/propierty/${propierty._id}`, {
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  const handleEdit = (property: Property) => {
+    setSelectedProperty(property);
+    setEditedProperty(property);
+    toggleModal();
+  };
+
+  const handleDelete = (property: Property) => {
+    fetch(`http://localhost:3000/api/v1/property/${property._id}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          setPropiertys(propierties.filter((prop) => prop._id !== data.data._id));
+          setProperties(properties.filter((property) => property._id !== data.data._id));
         }
       })
       .catch((error) => {
-        console.error("Error deleting propierty:", error);
+        console.error("Error deleting property:", error);
       });
   };
 
-  const handlePropiertyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePropertyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (editedPropierty) {
-      setEditedPropierty({ ...editedPropierty, [name]: value });
+    if (editedProperty) {
+      setEditedProperty({ ...editedProperty, [name]: value });
     }
   };
 
   const saveChanges = () => {
-    if (selectedPropierty && editedPropierty) {
-      const updatedPropierty = { ...editedPropierty };
-      delete updatedPropierty._id;
-      delete updatedPropierty.userId;
+    if (selectedProperty) {
+      const { _id, userId, createdAt, updatedAt, __v, ...updatedProperty } = editedProperty; // Excluir las propiedades no permitidas
 
-      fetch(`http://localhost:3000/api/v1/propierty/${selectedPropierty._id}`, {
+      fetch(`http://localhost:3000/api/v1/property/${selectedProperty._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedPropierty),
+        body: JSON.stringify(updatedProperty),
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.status === 200) {
-            setPropiertys((prevPropiertys) =>
-              prevPropiertys.map((prop) => (prop._id === data.data._id ? data.data : prop))
+          if (data.success) {
+            const updatedProperties = properties.map((property) =>
+              property._id === selectedProperty._id ? { ...property, ...updatedProperty } : property
             );
-            toggle();
-          } else {
-            console.error("Error updating propierty:", data.error);
+            setProperties(updatedProperties);
+            toggleModal();
           }
         })
         .catch((error) => {
-          console.error("Error updating propierty:", error);
+          console.error("Error updating property:", error);
         });
     }
   };
 
   return (
-    <OwnerLayout>
-      <Container className={styles.container}>
-        <h1 className={styles.heading}>Propiedades</h1>
-        <div className={styles.tableContainer}>
-          <Table className={styles.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Capacidad</TableCell>
-                <TableCell>Dirección</TableCell>
-                <TableCell>Contacto</TableCell>
-                <TableCell>Horario</TableCell>
-                <TableCell>Acciones</TableCell>
+    <Container>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Capacidad</TableCell>
+              <TableCell>Dirección</TableCell>
+              <TableCell>Contacto</TableCell>
+              <TableCell>Horario</TableCell>
+              <TableCell>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {properties.map((property) => (
+              <TableRow key={property._id}>
+                <TableCell>{property.name}</TableCell>
+                <TableCell>{property.capacity}</TableCell>
+                <TableCell>{property.address}</TableCell>
+                <TableCell>{property.contact}</TableCell>
+                <TableCell>{property.schedule}</TableCell>
+                <TableCell>
+                  <div>
+                    <Button variant="outlined" onClick={() => handleEdit(property)}>
+                      Editar
+                    </Button>
+                    <Modal open={modalOpen} onClose={toggleModal}>
+                      <div>
+                        <DialogTitle>EDITAR PROPIEDADES</DialogTitle>
+                        <DialogContent>
+                          <div>
+                            <FormGroup>
+                              <FormControl>
+                                <FormLabel htmlFor="name">Nombre</FormLabel>
+                                <Input
+                                  type="text"
+                                  id="name"
+                                  name="name"
+                                  value={editedProperty?.name || ""}
+                                  onChange={handlePropertyChange}
+                                />
+                              </FormControl>
+                            </FormGroup>
+                            <FormGroup>
+                              <FormControl>
+                                <FormLabel htmlFor="capacity">Capacidad</FormLabel>
+                                <Input
+                                  type="number"
+                                  id="capacity"
+                                  name="capacity"
+                                  value={editedProperty?.capacity || ""}
+                                  onChange={handlePropertyChange}
+                                />
+                              </FormControl>
+                            </FormGroup>
+                            <FormGroup>
+                              <FormControl>
+                                <FormLabel htmlFor="address">Dirección</FormLabel>
+                                <Input
+                                  type="text"
+                                  id="address"
+                                  name="address"
+                                  value={editedProperty?.address || ""}
+                                  onChange={handlePropertyChange}
+                                />
+                              </FormControl>
+                            </FormGroup>
+                            <FormGroup>
+                              <FormControl>
+                                <FormLabel htmlFor="contact">Contacto</FormLabel>
+                                <Input
+                                  type="text"
+                                  id="contact"
+                                  name="contact"
+                                  value={editedProperty?.contact || ""}
+                                  onChange={handlePropertyChange}
+                                />
+                              </FormControl>
+                            </FormGroup>
+                            <FormGroup>
+                              <FormControl>
+                                <FormLabel htmlFor="schedule">Horario</FormLabel>
+                                <Input
+                                  type="text"
+                                  id="schedule"
+                                  name="schedule"
+                                  value={editedProperty?.schedule || ""}
+                                  onChange={handlePropertyChange}
+                                />
+                              </FormControl>
+                            </FormGroup>
+                          </div>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={saveChanges} variant="contained" color="primary">
+                            Guardar Cambios
+                          </Button>
+                          <Button onClick={toggleModal} variant="contained" color="secondary">
+                            Cancelar
+                          </Button>
+                        </DialogActions>
+                      </div>
+                    </Modal>
+                    <Button variant="outlined" onClick={() => handleDelete(property)}>
+                      Eliminar
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {propierties.map((propierty) => (
-                <TableRow key={propierty._id}>
-                  <TableCell>{propierty.name}</TableCell>
-                  <TableCell>{propierty.capacity}</TableCell>
-                  <TableCell>{propierty.address}</TableCell>
-                  <TableCell>{propierty.contact}</TableCell>
-                  <TableCell>{propierty.schedule}</TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleEdit(propierty)}>Editar</Button>
-                    <Button onClick={() => handleDelete(propierty)}>Eliminar</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Editar Propiedad</ModalHeader>
-          <ModalBody>
-            <FormGroup>
-              <Label for="name">Nombre</Label>
-              <Input
-                type="text"
-                name="name"
-                id="name"
-                value={editedPropierty?.name || ""}
-                onChange={handlePropiertyChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="capacity">Capacidad</Label>
-              <Input
-                type="number"
-                name="capacity"
-                id="capacity"
-                value={editedPropierty?.capacity || ""}
-                onChange={handlePropiertyChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="address">Dirección</Label>
-              <Input
-                type="text"
-                name="address"
-                id="address"
-                value={editedPropierty?.address || ""}
-                onChange={handlePropiertyChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="contact">Contacto</Label>
-              <Input
-                type="text"
-                name="contact"
-                id="contact"
-                value={editedPropierty?.contact || ""}
-                onChange={handlePropiertyChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="schedule">Horario</Label>
-              <Input
-                type="text"
-                name="schedule"
-                id="schedule"
-                value={editedPropierty?.schedule || ""}
-                onChange={handlePropiertyChange}
-              />
-            </FormGroup>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={saveChanges}>
-              Guardar
-            </Button>{" "}
-            <Button color="secondary" onClick={toggle}>
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </Container>
-    </OwnerLayout>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 
-export default Propierty;
+export default Property;
+
+
+
+
+
+
+
+
+
