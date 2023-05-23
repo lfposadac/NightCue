@@ -2,6 +2,7 @@
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Button } from 'react-bootstrap';
+import usersImage from '../../../public/images/icon-user.png';
 import {
     Modal,
     ModalHeader,
@@ -63,6 +64,7 @@ const handleDelete = (user: User) => {
 
   const saveChanges = () => {
     if (selectedUser) {
+      const { _id, createdAt, updatedAt, __v, ...updatedRole } = editedUser;
       fetch(`http://localhost:3000/api/v1/user/${selectedUser._id}`, {
         method: 'PUT',
         headers: {
@@ -82,7 +84,11 @@ const handleDelete = (user: User) => {
   return (
     <DashboardLayout>
       <Container className={styles.container}>
+        <img src={usersImage.src} alt="Users" className={styles.image} />
         <h2 className={styles.heading}>Users</h2>
+        <p className={styles.subheading}>
+          Información sobre los usuarios del sistema.
+        </p>
         <div className={styles.tableContainer}>
           <Table striped bordered hover className={styles.table}>
             <thead>
@@ -112,6 +118,82 @@ const handleDelete = (user: User) => {
                       >
                         Edit
                       </Button>
+                      <Modal isOpen={modal} toggle={toggle}>
+                        <div className={styles.overlay}>
+                          <div className={styles.editContainer}>
+                            <ModalHeader toggle={toggle} className={styles.modalheader}>EDITAR USER</ModalHeader>
+                            <ModalBody>
+                              <div className={styles.formContainer}>
+                                <div className={styles.gridContainer}>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="userName">Nombre</Label>
+                                      <Input
+                                        type="text"
+                                        name="name"
+                                        value={editedUser?.name || ''}
+                                        onChange={handleUserChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="userLastName">Apellidos</Label>
+                                      <Input
+                                        type="text"
+                                        name="lastName"
+                                        value={editedUser?.lastName || ''}
+                                        onChange={handleUserChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                </div>
+                                <div className={styles.gridContainer}>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="userEmail">Email</Label>
+                                      <Input
+                                        type="email"
+                                        name="email"
+                                        value={editedUser?.email || ''}
+                                        onChange={handleUserChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="userCellphone">Celular</Label>
+                                      <Input
+                                        type="text"
+                                        name="cellphone"
+                                        value={editedUser?.cellphone || ''}
+                                        onChange={handleUserChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                </div>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="userAddress">Direccion</Label>
+                                  <Input
+                                    type="text"
+                                    name="address"
+                                    value={editedUser?.address || ''}
+                                    onChange={handleUserChange}
+                                  />
+                                </FormGroup>
+                              </div>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button color="primary" onClick={saveChanges} className={styles.button}>
+                                Save Changes
+                              </Button>
+                              <Button color="secondary" onClick={toggle} className={styles.button}>
+                                Cancel
+                              </Button>
+                            </ModalFooter>
+                          </div>
+                        </div>
+                      </Modal>
                       <Button
                         variant="danger"
                         onClick={() => handleDelete(user)}
@@ -126,66 +208,7 @@ const handleDelete = (user: User) => {
             </tbody>
           </Table>
         </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Edit User</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-                <Label for="userName">Name</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={editedUser?.name || ''}
-                  onChange={handleUserChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="userLastName">Last Name</Label>
-                <Input
-                  type="text"
-                  name="lastName"
-                  value={editedUser?.lastName || ''}
-                  onChange={handleUserChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="userEmail">Email</Label>
-                <Input
-                  type="email"
-                  name="email"
-                  value={editedUser?.email || ''}
-                  onChange={handleUserChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="userCellphone">Cellphone</Label>
-                <Input
-                  type="text"
-                  name="cellphone"
-                  value={editedUser?.cellphone || ''}
-                  onChange={handleUserChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="userAddress">Address</Label>
-                <Input
-                  type="text"
-                  name="address"
-                  value={editedUser?.address || ''}
-                  onChange={handleUserChange}
-                />
-              </FormGroup>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={saveChanges} className={styles.button}>
-              Save Changes
-            </Button>
-            <Button color="secondary" onClick={toggle} className={styles.button}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
+        
       </Container>
     </DashboardLayout>
   );

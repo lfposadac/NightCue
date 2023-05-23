@@ -3,6 +3,9 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useState, useEffect } from "react";
 import { Container, Table, Button } from "react-bootstrap";
+import rolesImage from "../../../public/images/icon-role.png";
+import { parseCookies } from "nookies";
+import { GetServerSidePropsContext } from "next";
 import {
   Modal,
   ModalHeader,
@@ -29,21 +32,25 @@ type Access = {
 
 const Roles = () => {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [access, setAccess] = useState({});
+  const [access, setAccess] = useState<Record<string, Access>>({});
   const [modal, setModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [editedRole, setEditedRole] = useState<Role | null>(null);
 
-  const toggle = () => setModal(!modal);
+  const toggle = () => {
+    setModal(!modal);
+  };
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/access")
       .then((response) => response.json())
       .then(({ data }) => {
-        data.forEach((element) => {
+        const accessObj: Record<string, Access> = {};
+        data.forEach((element: Access) => {
           const { _id, ...rest } = element;
-          setAccess((prevAccess) => ({ ...prevAccess, [_id]: rest }));
+          accessObj[_id] = rest;
         });
+        setAccess(accessObj);
       });
   }, []);
 
@@ -74,20 +81,30 @@ const Roles = () => {
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (editedRole) {
-      setEditedRole({ ...editedRole, [name]: value });
+      if (name === "access_ids") {
+        // Obtener los access_ids seleccionados
+        const selectedAccessIds = Array.from(
+          e.target.selectedOptions,
+          (option) => option.value
+        );
+        // Actualizar el arreglo de access_ids en el editedRole
+        setEditedRole({ ...editedRole, [name]: selectedAccessIds });
+      } else {
+        // Manejar los cambios en el nombre y la descripción
+        setEditedRole({ ...editedRole, [name]: value });
+      }
     }
   };
 
   const saveChanges = () => {
     if (selectedRole) {
-      const { _id, createdAt, updatedAt, __v, ...updatedRole } = editedRole; // Excluir las propiedades no permitidas
-
+      const { _id, createdAt, updatedAt, __v, ...updatedRole } = editedRole;
       fetch(`http://localhost:3000/api/v1/role/${selectedRole._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedRole), // Enviar el objeto actualizado sin las propiedades no permitidas
+        body: JSON.stringify(updatedRole),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -112,6 +129,7 @@ const Roles = () => {
   return (
     <DashboardLayout>
       <Container className={styles.container}>
+        <img src={rolesImage.src} alt="Roles" className={styles.image} />
         <h2 className={styles.heading}>Roles</h2>
         <p className={styles.subheading}>
           Información sobre los roles del sistema. Donde podrás eliminar y
@@ -120,7 +138,7 @@ const Roles = () => {
         <div className={styles.tableContainer}>
           <Table striped bordered hover className={styles.table}>
             <thead>
-              <tr>
+              <tr className={styles.tr}>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Accesos</th>
@@ -129,7 +147,7 @@ const Roles = () => {
             </thead>
             <tbody>
               {roles?.map((role) => (
-                <tr key={role.name}>
+                <tr key={role.name} className={styles.tr}>
                   <td>
                     <strong>{role.name}</strong>
                   </td>
@@ -150,6 +168,78 @@ const Roles = () => {
                       >
                         Editar
                       </Button>
+                      <Modal
+                        isOpen={modal}
+                        toggle={toggle}
+                        className={styles.modal}
+                      >
+                        <div className={styles.overlay}>
+                          <div className={styles.editContainer}>
+                            <ModalHeader
+                              toggle={toggle}
+                              className={styles.modalheader}
+                            >
+                              EDITAR ROL
+                            </ModalHeader>
+                            <ModalBody>
+                              <div className={styles.formContainer}>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="roleName">Nombre</Label>
+                                  <Input
+                                    type="text"
+                                    name="name"
+                                    value={editedRole?.name || ""}
+                                    onChange={handleRoleChange}
+                                  />
+                                </FormGroup>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="roleDescription">
+                                    Descripción
+                                  </Label>
+                                  <Input
+                                    type="textarea"
+                                    name="description"
+                                    value={editedRole?.description || ""}
+                                    onChange={handleRoleChange}
+                                  />
+                                </FormGroup>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="roleAccess">Accesos</Label>
+                                  <Input
+                                    type="select"
+                                    name="access_ids"
+                                    multiple
+                                    value={editedRole?.access_ids || []}
+                                    onChange={handleRoleChange}
+                                  >
+                                    {Object.keys(access).map((accessId) => (
+                                      <option key={accessId} value={accessId}>
+                                        {access[accessId].name}
+                                      </option>
+                                    ))}
+                                  </Input>
+                                </FormGroup>
+                              </div>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="primary"
+                                onClick={saveChanges}
+                                className={styles.button}
+                              >
+                                Guardar Cambios
+                              </Button>
+                              <Button
+                                color="secondary"
+                                onClick={toggle}
+                                className={styles.button}
+                              >
+                                Cancelar
+                              </Button>
+                            </ModalFooter>
+                          </div>
+                        </div>
+                      </Modal>
                       <Button
                         variant="danger"
                         onClick={() => handleDelete(role)}
@@ -164,47 +254,6 @@ const Roles = () => {
             </tbody>
           </Table>
         </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Editar Rol</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-                <Label for="roleName">Nombre</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={editedRole?.name || ""}
-                  onChange={handleRoleChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="roleDescription">Descripción</Label>
-                <Input
-                  type="textarea"
-                  name="description"
-                  value={editedRole?.description || ""}
-                  onChange={handleRoleChange}
-                />
-              </FormGroup>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onClick={saveChanges}
-              className={styles.button}
-            >
-              Guardar Cambios
-            </Button>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              className={styles.button}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </Modal>
       </Container>
     </DashboardLayout>
   );

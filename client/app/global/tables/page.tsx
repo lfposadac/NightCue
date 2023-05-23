@@ -3,6 +3,7 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useState, useEffect } from "react";
 import { Container, Table, Button } from "react-bootstrap";
+import tableImage from '../../../public/images/icon-table.png';
 import {
   Modal,
   ModalHeader,
@@ -100,15 +101,15 @@ const Tables = () => {
   return (
     <DashboardLayout>
       <Container className={styles.container}>
-        <h2 className={styles.heading}>Tables</h2>
+        <img src={tableImage.src} alt="Mesas" className={styles.image} />
+        <h2 className={styles.heading}>Mesas</h2>
         <p className={styles.subheading}>
-          Información sobre los tables del sistema. Donde podrás eliminar y
-          editarlos.
+        Información sobre las caracteristicas de las mesas registradas.
         </p>
         <div className={styles.tableContainer}>
           <Table striped bordered hover className={styles.table}>
             <thead>
-              <tr>
+              <tr className={styles.tr}>
               <th>Tipo</th>
               <th>Capacidad</th>
               <th>Descripción</th>
@@ -138,6 +139,114 @@ const Tables = () => {
                       >
                         Editar
                       </Button>
+                      <Modal isOpen={modal} toggle={toggle} className={styles.modal}>
+                        <div className={styles.overlay}>
+                          <div className={styles.editContainer}>
+                            <ModalHeader toggle={toggle} className={styles.modalheader}>EDITAR MESAS</ModalHeader>
+                            <ModalBody>
+                              <div className={styles.formContainer}>
+                                <div className={styles.gridContainer}>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                    <Label for="tableType">Tipo</Label>
+                                    <Input
+                                      type="text"
+                                      name="type"
+                                      value={editedTable?.type || ""}
+                                      onChange={handleTableChange}
+                                    />
+                                    </FormGroup >
+                                  </div>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="tableCapacity">Capacidad</Label>
+                                      <Input
+                                        type="number"
+                                        name="capacity"
+                                        value={editedTable?.capacity || ""}
+                                        onChange={handleTableChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                </div>
+                                <div className={styles.gridContainer}>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="tableDescription">Descripción</Label>
+                                      <Input
+                                        type="textarea"
+                                        name="description"
+                                        value={editedTable?.description || ""}
+                                        onChange={handleTableChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="tableUbication">Ubicación</Label>
+                                      <Input
+                                        type="text"
+                                        name="ubication"
+                                        value={editedTable?.ubication || ""}
+                                        onChange={handleTableChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                </div>
+                                <div className={styles.gridContainer}>
+                                  <div className={styles.gridItem}>
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="tableTypesOfSeats">Tipo de Asientos</Label>
+                                      <Input
+                                        type="text"
+                                        name="typesOfSeats"
+                                        value={editedTable?.typesOfSeats || ""}
+                                        onChange={handleTableChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                  <div className={styles.gridItem}>
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="tableReservationCost">Costo de Reserva</Label>
+                                      <Input
+                                        type="number"
+                                        name="reservationCost"
+                                        value={editedTable?.reservationCost || ""}
+                                        onChange={handleTableChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                </div>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="tableMinimumConsumption">Consumo Mínimo</Label>
+                                  <Input
+                                    type="number"
+                                    name="minimumConsumption"
+                                    value={editedTable?.minimumConsumption || ""}
+                                    onChange={handleTableChange}
+                                  />
+                                </FormGroup>
+                              </div>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="primary"
+                                onClick={saveChanges}
+                                className={styles.button}
+                              >
+                                Guardar Cambios
+                              </Button>
+                              <Button
+                                color="secondary"
+                                onClick={toggle}
+                                className={styles.button}
+                              >
+                                Cancelar
+                              </Button>
+                            </ModalFooter>
+                          </div>
+                        </div>
+                      </Modal>
                       <Button
                         variant="danger"
                         onClick={() => handleDelete(table)}
@@ -152,92 +261,6 @@ const Tables = () => {
             </tbody>
           </Table>
         </div>
-        <Modal isOpen={modal} toggle={toggle}>
-          <ModalHeader toggle={toggle}>Editar Rol</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-              <Label for="tableType">Tipo</Label>
-              <Input
-                type="text"
-                name="type"
-                value={editedTable?.type || ""}
-                onChange={handleTableChange}
-              />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableCapacity">Capacidad</Label>
-                <Input
-                  type="number"
-                  name="capacity"
-                  value={editedTable?.capacity || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableDescription">Descripción</Label>
-                <Input
-                  type="textarea"
-                  name="description"
-                  value={editedTable?.description || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableUbication">Ubicación</Label>
-                <Input
-                  type="text"
-                  name="ubication"
-                  value={editedTable?.ubication || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableTypesOfSeats">Tipo de Asientos</Label>
-                <Input
-                  type="text"
-                  name="typesOfSeats"
-                  value={editedTable?.typesOfSeats || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableReservationCost">Costo de Reserva</Label>
-                <Input
-                  type="number"
-                  name="reservationCost"
-                  value={editedTable?.reservationCost || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="tableMinimumConsumption">Consumo Mínimo</Label>
-                <Input
-                  type="number"
-                  name="minimumConsumption"
-                  value={editedTable?.minimumConsumption || ""}
-                  onChange={handleTableChange}
-                />
-              </FormGroup>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onClick={saveChanges}
-              className={styles.button}
-            >
-              Guardar Cambios
-            </Button>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              className={styles.button}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </Modal>
       </Container>
     </DashboardLayout>
   );

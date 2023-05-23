@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import propiedadesImage from '../../../public/images/icon-propiedad.png';
+import styles from "./propierty.module.css";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import {
   Container,
   Table,
@@ -12,8 +15,7 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import styles from "./propierty.module.css";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 
 type Propierty = {
   _id: string;
@@ -104,7 +106,8 @@ const Propierty = () => {
   return (
     <DashboardLayout>
       <Container className={styles.container}>
-        <h2 className={styles.heading}>Propierties</h2>
+        <img src={propiedadesImage.src} alt="Propiedades" className={styles.image} />
+        <h2 className={styles.heading}>Propiedades</h2>
         <p className={styles.subheading}>
         Información sobre las propiedades registradas.
         </p>
@@ -112,12 +115,12 @@ const Propierty = () => {
           <Table striped bordered hover className={styles.table}>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Capacity</th>
-                <th>Address</th>
-                <th>Contact</th>
-                <th>Schedule</th>
-                <th>Actions</th>
+                <th>Nombre</th>
+                <th>Capacidad</th>
+                <th>Direccion</th>
+                <th>Contacto</th>
+                <th>Horario</th>
+                <th className={styles.actions}>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -137,6 +140,94 @@ const Propierty = () => {
                       >
                         Editar
                       </Button>
+                      <Modal
+                        isOpen={modal}
+                        toggle={toggle}
+                        className={styles.modal}
+                      >
+                        <div className={styles.overlay}>
+                          <div className={styles.editContainer}>
+                            <ModalHeader toggle={toggle} className={styles.modalheader}>EDITAR PROPIEDADES</ModalHeader>
+                            <ModalBody>
+                              <div className={styles.formContainer}>
+                                <div className={styles.gridContainer}>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="name">Name</Label>
+                                      <Input
+                                        type="text"
+                                        name="name"
+                                        value={editedPropierty?.name || ""}
+                                        onChange={handlePropiertyChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="capacity">Capacity</Label>
+                                      <Input
+                                        type="number"
+                                        name="capacity"
+                                        value={selectedPropierty?.capacity || ""}
+                                        onChange={handlePropiertyChange}
+                                      />
+                                    </FormGroup>
+                                  </div>
+                                </div>
+                                <div className={styles.gridContainer}>
+                                  <div className="col">
+                                    <FormGroup className={styles.formGroup}>
+                                      <Label for="address">Address</Label>
+                                      <Input
+                                        type="text"
+                                        name="address"
+                                        value={selectedPropierty?.address || ""}
+                                        onChange={handlePropiertyChange}
+                                      />
+                                      </FormGroup>
+                                      </div>
+                                      <div className="col">
+                                      <FormGroup className={styles.formGroup}>
+                                        <Label for="contact">Contact</Label>
+                                        <Input
+                                          type="text"
+                                          name="contact"
+                                          value={selectedPropierty?.contact || ""}
+                                          onChange={handlePropiertyChange}
+                                        />
+                                      </FormGroup>
+                                    </div>
+                                  </div>
+                                <FormGroup className={styles.formGroup}>
+                                  <Label for="schedule">Schedule</Label>
+                                  <Input
+                                    type="text"
+                                    name="schedule"
+                                    value={selectedPropierty?.schedule || ""}
+                                    onChange={handlePropiertyChange}
+                                  />
+                                </FormGroup>
+                              </div>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="primary"
+                                onClick={saveChanges}
+                                className={styles.button}
+                              >
+                                Guardar Cambios
+                              </Button>
+                              <Button
+                                color="secondary"
+                                onClick={toggle}
+                                className={styles.button}
+                              >
+                                Cancelar
+                              </Button>
+                            </ModalFooter>
+                          </div>
+                        </div>
+                      </Modal>
                       <Button
                         variant="danger"
                         onClick={() => handleDelete(propierty)}
@@ -151,78 +242,7 @@ const Propierty = () => {
             </tbody>
           </Table>
         </div>
-        <Modal
-          isOpen={modal}
-          toggle={toggle}
-          className={styles.modalContainer}
-        >
-          <ModalHeader toggle={toggle}>Editar Propierty</ModalHeader>
-          <ModalBody>
-            <div className={styles.editContainer}>
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={editedPropierty?.name || ""}
-                  onChange={handlePropiertyChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="capacity">Capacity</Label>
-                <Input
-                  type="number"
-                  name="capacity"
-                  value={selectedPropierty?.capacity || ""}
-                  onChange={handlePropiertyChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="address">Address</Label>
-                <Input
-                  type="text"
-                  name="address"
-                  value={selectedPropierty?.address || ""}
-                  onChange={handlePropiertyChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="contact">Contact</Label>
-                <Input
-                  type="text"
-                  name="contact"
-                  value={selectedPropierty?.contact || ""}
-                  onChange={handlePropiertyChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="schedule">Schedule</Label>
-                <Input
-                  type="text"
-                  name="schedule"
-                  value={selectedPropierty?.schedule || ""}
-                  onChange={handlePropiertyChange}
-                />
-              </FormGroup>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onClick={saveChanges}
-              className={styles.button}
-            >
-              Save Changes
-            </Button>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              className={styles.button}
-            >
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
+        
       </Container>
     </DashboardLayout>
   );
