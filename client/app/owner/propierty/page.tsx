@@ -18,6 +18,7 @@ import {
   FormLabel,
   Input,
 } from "@mui/material";
+import OwnerLayout from "@/components/layouts/OwnerLayout";
 
 type Property = {
   _id: string;
@@ -106,7 +107,7 @@ const Property = () => {
   };
 
   return (
-    <Container>
+    <OwnerLayout>
       <TableContainer>
         <Table>
           <TableHead>
@@ -219,7 +220,7 @@ const Property = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+  </OwnerLayout>
   );
 };
 

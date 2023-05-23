@@ -1,51 +1,51 @@
 /* styles/navigation.css */
 
 .header {
-    height: 50px;
-    /* aumenta la altura un poco para que los botones tengan más espacio */
-    width: 100%;
-    /* usa el 100% para que cubra toda la anchura */
-    color: rgb(255, 255, 255);
-    display: flex;
-    /* agrega flex para centrar el .nav */
-    justify-content: center;
-    /* centra el .nav */
-    align-items: center;
-    /* centra verticalmente los elementos del .nav */
+  height: 50px;
+  /* aumenta la altura un poco para que los botones tengan más espacio */
+  width: 100%;
+  /* usa el 100% para que cubra toda la anchura */
+  color: rgb(255, 255, 255);
+  display: flex;
+  /* agrega flex para centrar el .nav */
+  justify-content: center;
+  /* centra el .nav */
+  align-items: center;
+  /* centra verticalmente los elementos del .nav */
 }
 
 .nav {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .navigation {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    justify-content: center;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
 }
 
 .li {
-    margin: 0 0.5rem;
+  margin: 0 0.5rem;
 }
 
 .navigation a {
-    color: inherit;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    transition: background-color 0.2s, color 0.2s;
-    border-radius: 20px;
-    /* agrega border-radius para redondear los botones */
-    background-color: rgba(20, 20, 20, 0.8);
-    /* agrega un color de fondo ligeramente más oscuro con algo de transparencia */
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 20px;
+  /* agrega border-radius para redondear los botones */
+  background-color: rgba(20, 20, 20, 0.8);
+  /* agrega un color de fondo ligeramente más oscuro con algo de transparencia */
 }
 
 .navigation a:hover {
-    background-color: white;
-    color: black;
+  background-color: white;
+  color: black;
 }

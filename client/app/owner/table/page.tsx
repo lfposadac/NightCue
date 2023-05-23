@@ -1,7 +1,7 @@
 "use client";
 import OwnerLayout from "@/components/layouts/OwnerLayout";
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { Container, Table, Button } from "@mui/material";
+import { Container, Table, Button, Alert } from "@mui/material";
 import {
   Modal,
   TableHead,
@@ -10,8 +10,8 @@ import {
   TableCell,
   Typography,
   TextField,
+  Paper,
 } from "@mui/material";
-import styles from "./table.module.css";
 
 type TableData = {
   _id: string;
@@ -30,6 +30,7 @@ const Tables = () => {
   const [modal, setModal] = useState(false);
   const [selectedTable, setSelectedTable] = useState<TableData | null>(null);
   const [editedTable, setEditedTable] = useState<TableData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const toggle = () => setModal(!modal);
 
@@ -92,10 +93,11 @@ const Tables = () => {
             );
             toggle();
           } else {
-            console.error("Error updating table:", data.error);
+            setError("Error al actualizar la mesa");
           }
         })
         .catch((error) => {
+          setError("Error al actualizar la mesa");
           console.error("Error updating table:", error);
         });
     }
@@ -103,100 +105,112 @@ const Tables = () => {
 
   return (
     <OwnerLayout>
-      <Container className={styles.container}>
-        <Typography variant="h4">Mesas</Typography>
+      <Container>
+        <Typography variant="h4" sx={{ align: "center", color: "white", mb: 2 }}>
+          Mesas
+        </Typography>
         <Button onClick={toggle} variant="contained" color="primary">
           Agregar Mesa
         </Button>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Tipo</TableCell>
-              <TableCell>Capacidad</TableCell>
-              <TableCell>Descripción</TableCell>
-              <TableCell>Ubicación</TableCell>
-              <TableCell>Tipos de Asientos</TableCell>
-              <TableCell>Costo de Reservación</TableCell>
-              <TableCell>Consumo Mínimo</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tables.map((table) => (
-              <TableRow key={table._id}>
-                <TableCell>{table._id}</TableCell>
-                <TableCell>{table.type}</TableCell>
-                <TableCell>{table.capacity}</TableCell>
-                <TableCell>{table.description}</TableCell>
-                <TableCell>{table.ubication}</TableCell>
-                <TableCell>{table.typesOfSeats}</TableCell>
-                <TableCell>{table.reservationCost}</TableCell>
-                <TableCell>{table.minimumConsumption}</TableCell>
-                <TableCell>
-                  <Button onClick={() => handleEdit(table)}>Editar</Button>
-                  <Button onClick={() => handleDelete(table)}>Eliminar</Button>
-                </TableCell>
+        {error && <Alert severity="error">{error}</Alert>}
+        <Paper sx={{ mt: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Tipo</TableCell>
+                <TableCell>Capacidad</TableCell>
+                <TableCell>Descripción</TableCell>
+                <TableCell>Ubicación</TableCell>
+                <TableCell>Tipos de Asientos</TableCell>
+                <TableCell>Costo de Reservación</TableCell>
+                <TableCell>Consumo Mínimo</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {tables.map((table) => (
+                <TableRow key={table._id}>
+                  <TableCell>{table._id}</TableCell>
+                  <TableCell>{table.type}</TableCell>
+                  <TableCell>{table.capacity}</TableCell>
+                  <TableCell>{table.description}</TableCell>
+                  <TableCell>{table.ubication}</TableCell>
+                  <TableCell>{table.typesOfSeats}</TableCell>
+                  <TableCell>{table.reservationCost}</TableCell>
+                  <TableCell>{table.minimumConsumption}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleEdit(table)}>Editar</Button>
+                    <Button onClick={() => handleDelete(table)}>Eliminar</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
       </Container>
 
       {/* Modal de edición */}
       <Modal open={modal} onClose={toggle}>
-        <div className={styles.modal}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="h5">Editar Mesa</Typography>
           {selectedTable && (
-            <div className={styles.form}>
+            <div>
               <TextField
                 label="Tipo"
                 name="type"
-                value={editedTable?.type}
+                value={editedTable?.type || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
               <TextField
                 label="Capacidad"
                 name="capacity"
                 type="number"
-                value={editedTable?.capacity}
+                value={editedTable?.capacity || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
               <TextField
                 label="Descripción"
                 name="description"
-                value={editedTable?.description}
+                value={editedTable?.description || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
               <TextField
                 label="Ubicación"
                 name="ubication"
-                value={editedTable?.ubication}
+                value={editedTable?.ubication || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
               <TextField
                 label="Tipos de Asientos"
                 name="typesOfSeats"
-                value={editedTable?.typesOfSeats}
+                value={editedTable?.typesOfSeats || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
               <TextField
                 label="Costo de Reservación"
                 name="reservationCost"
                 type="number"
-                value={editedTable?.reservationCost}
+                value={editedTable?.reservationCost || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
               <TextField
                 label="Consumo Mínimo"
                 name="minimumConsumption"
                 type="number"
-                value={editedTable?.minimumConsumption}
+                value={editedTable?.minimumConsumption || ""}
                 onChange={handleTableChange}
+                fullWidth
               />
             </div>
           )}
-          <div className={styles.modalButtons}>
+          <div>
             <Button onClick={saveChanges} variant="contained" color="primary">
               Guardar
             </Button>
@@ -204,11 +218,16 @@ const Tables = () => {
               Cancelar
             </Button>
           </div>
-        </div>
+        </Paper>
       </Modal>
     </OwnerLayout>
   );
 };
 
 export default Tables;
+
+
+
+
+
 

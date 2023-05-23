@@ -1,16 +1,18 @@
 "use client";
 
 import DefaultLayout from "@/components/layouts/DefaultLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./Login.module.css";
-import { useRouter } from "next/router";
+import jwtDecode from "jwt-decode";
 
 export default function LoginPage() {
+  const [roles, setRoles] = useState([]);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
+
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
@@ -35,11 +37,41 @@ export default function LoginPage() {
       localStorage.setItem("token", token);
 
       // Relocate to home page
-      window.location.href = "/";
+      const decodeJWT = jwtDecode(token);
+      const roleId = decodeJWT?.roelId;
+
+      let role = null;
+      roles?.forEach((e) => {
+        if (role) return;
+        role = e._id === roleId ? e : null;
+      });
+
+      switch (role.name) {
+        case "Global User":
+          window.location.href = "/global";
+          break;
+
+        case "Owner Admin":
+          window.location.href = "/owner";
+          break;
+
+        default:
+          window.location.href = "/client";
+          break;
+      }
     } catch ({ response }) {
       alert("Correo o contraseña incorrectos");
     }
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      const { data } = await axios.get("http://localhost:3000/api/v1/role");
+      const { data: dataRoles } = data;
+      setRoles(dataRoles);
+    };
+    getData();
+  }, []);
 
   return (
     <DefaultLayout>
