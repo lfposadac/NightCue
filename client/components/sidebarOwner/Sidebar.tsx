@@ -80,17 +80,17 @@ export default function Sidebar() {
               </div>
               <ListItemText primary="Propiedades" />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               button
               component={Link}
               href="/owner/table"
               onClick={handleMenuItemClick}
             >
               <div>
-                <ChairIcon /> {/* Icono de silla */}
+                <ChairIcon /> 
               </div>
               <ListItemText primary="Mesas" />
-            </ListItem>
+            </ListItem> */}
           </List>
           <List>
             <ListItem
@@ -131,11 +131,12 @@ export default function Sidebar() {
               <ListItemText primary="Botón de panico" />
             </ListItem>
           </List>
-          <ListItem 
-          button 
-          component={Link}
-          href="/login" 
-          onClick={handleLogout}>
+          <ListItem
+            button
+            component={Link}
+            href="/login"
+            onClick={handleLogout}
+          >
             <div>
               <ExitToAppIcon /> {/* Icono genérico de salida */}
             </div>
