@@ -7,8 +7,8 @@ import BookIcon from "@mui/icons-material/Book";
 import HomeIcon from "@mui/icons-material/Home";
 import ChairIcon from "@mui/icons-material/Chair";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 
 const HamburgerButton = styled(Button)(({ theme }) => ({
   position: "fixed",
@@ -22,7 +22,7 @@ const SidebarContainer = styled("div")(({ theme }) => ({
   width: 250,
   backgroundColor: "#000", // Cambiar el color de fondo a negro
   color: "#fff", // Cambiar el color del texto a blanco
-  height: "100vh"
+  height: "100vh",
 }));
 
 const BottomItem = styled(ListItem)(({ theme }) => ({
@@ -100,8 +100,8 @@ export default function Sidebar() {
               </div>
               <ListItemText primary="Home" />
             </ListItem>
-            </List>
-            <List>
+          </List>
+          <List>
             <ListItem
               button
               component={Link}
@@ -113,8 +113,8 @@ export default function Sidebar() {
               </div>
               <ListItemText primary="ListaDeCanciones" />
             </ListItem>
-            </List>
-            <List>
+          </List>
+          <List>
             <ListItem
               button
               component={Link}
@@ -126,11 +126,8 @@ export default function Sidebar() {
               </div>
               <ListItemText primary="Botón de panico" />
             </ListItem>
-            </List>
-          <ListItem
-            button
-            onClick={handleMenuItemClick}
-          >
+          </List>
+          <ListItem button onClick={handleMenuItemClick}>
             <div>
               <ExitToAppIcon /> {/* Icono genérico de salida */}
             </div>
@@ -141,28 +138,3 @@ export default function Sidebar() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
