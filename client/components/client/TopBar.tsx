@@ -20,12 +20,12 @@ export default function Header() {
           <Link href="/client" className="text-gray-800 hover:text-gray-600">
             Inicio
           </Link>
-          <Link
+          {/* <Link
             className="text-gray-800 hover:text-gray-600"
             href="/client/propierties"
           >
             Establecimientos
-          </Link>
+          </Link> */}
           <Link
             className="text-gray-800 hover:text-gray-600"
             href="/client/bookings"
