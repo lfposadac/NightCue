@@ -22,7 +22,7 @@ export default function Header() {
           </Link>
           <Link
             className="text-gray-800 hover:text-gray-600"
-            href="/client/bookings"
+            href="/client/booking"
           >
             Reservas
           </Link>
