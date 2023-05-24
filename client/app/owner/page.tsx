@@ -74,11 +74,13 @@ const Dashboard: React.FC = () => {
               </InfoContainer>
           </Grid>
           <Grid item xs={12} sm={4}>
+          <Link href="/owner/music" passHref>
               <InfoContainer>
                 <LibraryMusicIcon  fontSize="large" />
                 <Typography variant="h4">LISTA DE CANCIONES</Typography>
                 <Typography variant="body1">Acá podes encontrar la lista de canciones</Typography>
               </InfoContainer>
+             </Link>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Link href="/owner/propierty" passHref>

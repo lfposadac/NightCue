@@ -65,6 +65,7 @@ const Property = () => {
   const [successAlert, setSuccessAlert] = useState<string | null>(null);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
   const [token, settoken] = useState<string | null>(null);
+  const [createdProperty, setCreatedProperty] = useState<Property | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -166,7 +167,7 @@ const Property = () => {
   };
 
   const addProperty = () => {
-    if (editedProperty) {
+    if (createdProperty) {
       fetch("http://localhost:3000/api/v1/propierty", {
         method: "POST",
         headers: {
@@ -174,11 +175,11 @@ const Property = () => {
         },
         body: JSON.stringify({
           userId: "64653384b532c1635f84cefb",
-          name: editedProperty.name,
-          capacity: editedProperty.capacity,
-          address: editedProperty.address,
-          contact: editedProperty.contact,
-          schedule: editedProperty.schedule
+          name: createdProperty.name,
+          capacity: createdProperty.capacity,
+          address: createdProperty.address,
+          contact: createdProperty.contact,
+          schedule: createdProperty.schedule
         }),
       })
         .then((response) => response.json())

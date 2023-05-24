@@ -1,4 +1,5 @@
 "use client";
+import OwnerLayout from "@/components/layouts/OwnerLayout";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -46,8 +47,10 @@ export default function Music() {
   }, []);
 
   return (
+   <OwnerLayout>
     <div className="flex flex-col justify-end items-center">
       <h1 className="text-3xl">Aquí Puedes Ver Las Ultimas Canciones</h1>
+      <body1 className="text-3xl">Encontrarás todas las canciones que han pedido en cada uno de los establecimientos</body1>
 
       <form>
         <label>Selecciona El Establecimiento</label>
@@ -65,6 +68,6 @@ export default function Music() {
         </select>
       </form>
     </div>
+</OwnerLayout>
   );
 }
-
