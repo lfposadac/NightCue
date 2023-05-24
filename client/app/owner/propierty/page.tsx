@@ -124,6 +124,12 @@ const Property = () => {
         console.error("Error deleting property:", error);
       });
   };
+  const handlePropertyChangeAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (createdProperty) {
+      setCreatedProperty({ ...createdProperty, [name]: value });
+    }
+  };
 
   const handlePropertyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -247,7 +253,7 @@ const Property = () => {
         </Button>
         <Modal open={modalOpen} onClose={toggleModal}>
           <div style={{ backgroundColor: "white", padding: "20px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-            <DialogTitle>{selectedProperty ? "Editar Propiedad" : "Agregar Propiedad"}</DialogTitle>
+            <DialogTitle>{selectedProperty ? "Editar Propiedad" : "Editar Propiedad"}</DialogTitle>
             <DialogContent>
               <FormGroup>
                 <FormControl>
