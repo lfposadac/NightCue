@@ -5,12 +5,11 @@ import { useEffect, useState } from "react";
 
 export default function Bookings() {
   const [propierties, setPropierties] = useState({});
-  const [propierty, setPropierty] = useState("");
   const [tables, setTables] = useState([]);
+  const [propierty, setPropierty] = useState("");
   const [selectedTable, setSelectedTable] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(0);
-  const [reservationId, setReservationId] = useState("");
 
   const handlePropiertyChange = async (e) => {
     e.preventDefault();
@@ -48,7 +47,6 @@ export default function Bookings() {
           `http://localhost:3000/api/v1/table?idPropierty=${propierty}`
         );
         const { data } = response.data;
-        console.log(data);
         setTables(data);
       } catch (error) {
         console.log(error);
@@ -64,42 +62,38 @@ export default function Bookings() {
   };
 
   const handleDateChange = (e) => {
-    console.log(e)
     setSelectedDate(e);
-    
   };
-  const handleNumberOfGuestsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumberOfGuestsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNumberOfGuests(parseInt(e.target.value, 10));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const decodedToken: any = jwtDecode(token);
-        const userId = decodedToken.userId;
-        console.log(userId)
-  
-        const response = await axios.put(
-          `http://localhost:3000/api/v1/booking/${reservationId}`,
-          {
-            idTable: selectedTable,
-            date: selectedDate,
-            numberOfGuests: numberOfGuests,
-            userId: userId
-          }
-        );
-        console.log("Reserva actualizada:", response.data);
-      } else {
-        // Handle case where token is not available
-      }
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const decodedToken: any = jwtDecode(token);
+      const { userId } = decodedToken;
+      if (!userId) return;
+      const data = {
+        idTable: selectedTable,
+        date: selectedDate,
+        numberOfGuests,
+        userId,
+      };
+
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/booking/${reservationId}`,
+        data
+      );
+      console.log(response);
     } catch (error) {
       console.log("Error al actualizar reserva:", error);
     }
   };
-  
-  
 
   const getNextDays = () => {
     const today = new Date();
@@ -117,12 +111,14 @@ export default function Bookings() {
   };
 
   const formatDate = (date: Date) => {
+    if (!date) return "";
+    if (!(date instanceof Date)) return "";
     const options = { weekday: "long", month: "long", day: "numeric" };
-    return date.toLocaleDateString("es-ES", options);
+    return date?.toLocaleDateString("es-ES", options);
   };
 
   return (
-    <div className="flex flex-col justify-end items-center h-min-[100bh]">
+    <div className="flex flex-col justify-end items-center min-h-screen">
       <h1 className="text-3xl">Establecimiento donde deseas reservar</h1>
       <form>
         <div className="flex flex-wrap justify-center mt-4">
@@ -152,7 +148,7 @@ export default function Bookings() {
               >
                 <option value="">Mesas</option>
                 {tables.map((table) => (
-                  <option key={table._id} value={table.type}>
+                  <option key={table._id} value={table._id}>
                     {table.type}
                   </option>
                 ))}
@@ -169,9 +165,11 @@ export default function Bookings() {
                   <div
                     key={date.getTime()}
                     className={`date-card ${
-                      formatDate(date) === selectedDate ? "selected" : ""
+                      formatDate(date) === formatDate(selectedDate)
+                        ? "selected"
+                        : ""
                     }`}
-                    onClick={() => handleDateChange(formatDate(date))}
+                    onClick={() => handleDateChange(date)}
                   >
                     <span>{formatDate(date)}</span>
                   </div>
@@ -189,13 +187,16 @@ export default function Bookings() {
                 value={numberOfGuests}
                 onChange={handleNumberOfGuestsChange}
                 className="form-control"
+                min={1}
               />
             </div>
           </form>
         </div>
         <button
           onClick={handleSubmit}
-          disabled={!propierty || !selectedTable || !selectedDate || numberOfGuests <= 0}
+          disabled={
+            !propierty || !selectedTable || !selectedDate || numberOfGuests <= 0
+          }
           className="btn-reservar"
         >
           Reservar
