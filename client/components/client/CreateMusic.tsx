@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { Modal, Ripple, initTE } from "tw-elements";
 initTE({ Modal, Ripple });
 
-export default function AlertButton() {
+export default function CreateMusic({ addMusic }) {
   const [seeModal, setSeeModal] = useState(false);
   const [properties, setProperties] = useState({});
   const [alert, setAlert] = useState({
     userId: "",
     propiertyId: "",
-    message: "",
+    name: "",
   });
 
   const handlePropiertyChange = (e) => {
@@ -21,11 +21,13 @@ export default function AlertButton() {
 
   const handleMessageChange = (e) => {
     const { value } = e.target;
-    setAlert((prev) => ({ ...prev, message: value }));
+    setAlert((prev) => ({ ...prev, name: value }));
   };
 
   const handleSendAlert = async () => {
-    await axios.post("http://localhost:3000/api/v1/alert", alert);
+    const res = await axios.post("http://localhost:3000/api/v1/music", alert);
+    const { data } = res.data;
+    addMusic(data);
     setSeeModal(false);
   };
 
@@ -58,10 +60,10 @@ export default function AlertButton() {
     <>
       <button
         type="button"
-        className="fixed bottom-3 right-3 z-50 rounded bg-red-500 font-bold px-6 pb-2 pt-2.5 text-xs uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-red-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-red-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-red-500 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+        className="fixed bottom-3 left-3 z-50 rounded bg-green-500 font-bold px-6 pb-2 pt-2.5 text-xs uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-green-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
         onClick={() => setSeeModal(true)}
       >
-        Alert
+        Pedir Canción
       </button>
 
       {seeModal && (
@@ -73,7 +75,7 @@ export default function AlertButton() {
                   className="text-xl font-medium leading-normal text-neutral-800 "
                   id="exampleModalLabel"
                 >
-                  Crear Alerta
+                  Pedir Canción
                 </h5>
 
                 <button
@@ -122,11 +124,11 @@ export default function AlertButton() {
                       rows={3}
                       placeholder="Your message"
                       onChange={handleMessageChange}
-                      value={alert.message}
+                      value={alert?.name}
                     />
-                    {alert.message.length === 0 && (
+                    {alert?.name?.length === 0 && (
                       <label className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none">
-                        Escribe Tu Problema
+                        Escribe Tu Canción
                       </label>
                     )}
                   </div>
@@ -151,7 +153,7 @@ export default function AlertButton() {
                   data-te-ripple-color="light"
                   onClick={handleSendAlert}
                 >
-                  Enviar Alerta
+                  Pedir Canción
                 </button>
               </div>
             </div>

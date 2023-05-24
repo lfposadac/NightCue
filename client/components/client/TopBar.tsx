@@ -1,7 +1,13 @@
+"use client";
 import Link from "next/link";
 import HamburgerButton from "./HamburgerButton";
 
 export default function Header() {
+  const logOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
   return (
     <header className="md:sticky top-0 z-50 flex items-center justify-between w-full px-4 py-3 bg-white shadow-md md:px-6 md:py-4">
       <div className="flex items-center justify-between w-full">
@@ -32,7 +38,11 @@ export default function Header() {
           >
             Música
           </Link>
-          <Link className="text-gray-800 hover:text-gray-600" href="/contacto">
+          <Link
+            className="text-gray-800 hover:text-gray-600"
+            href={"/"}
+            onClick={logOut}
+          >
             Salir
           </Link>
         </nav>
