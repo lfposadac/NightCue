@@ -1,4 +1,6 @@
 "use client";
+import CreateMusic from "@/components/client/CreateMusic";
+import SingleMusic from "@/components/client/SingleMusic";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -10,6 +12,10 @@ export default function Music() {
   const handlePropiertyChange = (e) => {
     const { value } = e.target;
     setProperty(value);
+  };
+
+  const addMusic = (newMusic) => {
+    setMusic((prev) => [...prev, newMusic]);
   };
 
   useEffect(() => {
@@ -46,7 +52,8 @@ export default function Music() {
   }, []);
 
   return (
-    <div className="flex flex-col justify-end items-center">
+    <div className="flex flex-col items-center min-h-[100vh] pt-5">
+      <CreateMusic addMusic={addMusic} />
       <h1 className="text-3xl">Aquí Puedes Ver Las Ultimas Canciones</h1>
 
       <form>
@@ -64,6 +71,12 @@ export default function Music() {
           ))}
         </select>
       </form>
+
+      <div className="flex flex-wrap gap-4 justify-center">
+        {music.map((music, i) => (
+          <SingleMusic key={i} music={music} />
+        ))}
+      </div>
     </div>
   );
 }
