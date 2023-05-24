@@ -7,6 +7,8 @@ import BookIcon from "@mui/icons-material/Book";
 import HomeIcon from "@mui/icons-material/Home";
 import ChairIcon from "@mui/icons-material/Chair";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 
 const HamburgerButton = styled(Button)(({ theme }) => ({
   position: "fixed",
@@ -99,10 +101,32 @@ export default function Sidebar() {
               <ListItemText primary="Home" />
             </ListItem>
             </List>
+            <List>
+            <ListItem
+              button
+              component={Link}
+              href="/owner"
+              onClick={handleMenuItemClick}
+            >
+              <div>
+                <LibraryMusicIcon /> {/* Icono de libro */}
+              </div>
+              <ListItemText primary="ListaDeCanciones" />
+            </ListItem>
+            </List>
+            <List>
+            <ListItem
+              button
+              onClick={handleMenuItemClick}
+            >
+              <div>
+                <ReportProblemIcon /> {/* Icono de libro */}
+              </div>
+              <ListItemText primary="Botón de panico" />
+            </ListItem>
+            </List>
           <ListItem
             button
-            component={Link}
-            href="/login"
             onClick={handleMenuItemClick}
           >
             <div>

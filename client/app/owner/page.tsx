@@ -6,6 +6,8 @@ import { styled } from '@mui/system';
 import ChairIcon from '@mui/icons-material/Chair';
 import BookIcon from '@mui/icons-material/Book';
 import HouseIcon from '@mui/icons-material/House';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import Link from 'next/link';
 
 const WelcomeContainer = styled('div')(({ theme }) => ({
@@ -63,6 +65,20 @@ const Dashboard: React.FC = () => {
                 <Typography variant="body1">Información sobre las reservas en el sistema.</Typography>
               </InfoContainer>
             </Link>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+              <InfoContainer>
+                <ReportProblemIcon fontSize="large" />
+                <Typography variant="h4">BOTON DE ALERTA</Typography>
+                <Typography variant="body1">ALERTA.</Typography>
+              </InfoContainer>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+              <InfoContainer>
+                <LibraryMusicIcon  fontSize="large" />
+                <Typography variant="h4">LISTA DE CANCIONES</Typography>
+                <Typography variant="body1">Acá podes encontrar la lista de canciones</Typography>
+              </InfoContainer>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Link href="/owner/propierty" passHref>

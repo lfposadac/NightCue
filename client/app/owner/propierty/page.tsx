@@ -19,7 +19,10 @@ import {
   FormLabel,
   Input,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
+import jwtDecode from "jwt-decode";
 
 type Property = {
   _id: string;
@@ -31,21 +34,62 @@ type Property = {
   schedule: string;
 };
 
+const Validation = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
+
+  const decode = jwtDecode(token);
+  console.log(decode);
+  const { userId } = decode;
+
+  if (!userId) {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
+  if (userId !== "64653384b532c1635f84cefb") {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
+  return <></>;
+};
+
 const Property = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [editedProperty, setEditedProperty] = useState<Property | null>(null);
+  const [successAlert, setSuccessAlert] = useState<string | null>(null);
+  const [errorAlert, setErrorAlert] = useState<string | null>(null);
+  const [token, settoken] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const decode =jwtDecode(token);
+    const { userId } = decode;
+    settoken(userId)
+  });
+  
+
+  useEffect(() => {
+    if (!token || token?.length <= 0){
+      return 
+    } 
     fetchProperties();
-  }, []);
+  }, [token]);
 
   const fetchProperties = () => {
-    fetch("http://localhost:3000/api/v1/propierty")
+    console.log(token);
+    if (!token || token?.length <= 0){
+      return 
+    } 
+    fetch(`http://localhost:3000/api/v1/propierty?userId=${token}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Verifica los datos recibidos en la consola
+        console.log(data);
         setProperties(data.data);
       })
       .catch((error) => {
@@ -53,7 +97,11 @@ const Property = () => {
       });
   };
 
-  const toggleModal = () => setModalOpen(!modalOpen);
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+    setSuccessAlert(null);
+    setErrorAlert(null);
+  };
 
   const handleEdit = (property: Property) => {
     setSelectedProperty(property);
@@ -72,7 +120,7 @@ const Property = () => {
         }
       })
       .catch((error) => {
-        console.error("Error deleting propierty:", error);
+        console.error("Error deleting property:", error);
       });
   };
 
@@ -85,14 +133,14 @@ const Property = () => {
 
   const saveChanges = () => {
     if (selectedProperty) {
-      const { _id, userId, createdAt, updatedAt, __v, ...updatedProperty } = editedProperty; // Excluir las propiedades no permitidas
+      const { _id, userId, createdAt, updatedAt, __v, ...updatedProperty } = editedProperty;
 
       fetch(`http://localhost:3000/api/v1/propierty/${selectedProperty._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedProperty), // Enviar el objeto actualizado sin las propiedades no permitidas
+        body: JSON.stringify(updatedProperty),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -104,12 +152,50 @@ const Property = () => {
               )
             );
             toggleModal();
+            setSuccessAlert("Propiedad actualizada exitosamente.");
           } else {
             console.error("Error updating property:", data.error);
+            setErrorAlert("Error al actualizar la propiedad. Por favor, intenta nuevamente.");
           }
         })
         .catch((error) => {
           console.error("Error updating property:", error);
+          setErrorAlert("Error al actualizar la propiedad. Por favor, intenta nuevamente.");
+        });
+    }
+  };
+
+  const addProperty = () => {
+    if (editedProperty) {
+      fetch("http://localhost:3000/api/v1/propierty", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: "64653384b532c1635f84cefb",
+          name: editedProperty.name,
+          capacity: editedProperty.capacity,
+          address: editedProperty.address,
+          contact: editedProperty.contact,
+          schedule: editedProperty.schedule
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.status === 201) {
+            setProperties([...properties, data.data]);
+            toggleModal();
+            setSuccessAlert("Propiedad agregada exitosamente.");
+          } else {
+            console.error("Error adding property:", data.error);
+            setErrorAlert("Error al agregar la propiedad. Por favor, intenta nuevamente.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error adding property:", error);
+          setErrorAlert("Error al agregar la propiedad. Por favor, intenta nuevamente.");
         });
     }
   };
@@ -117,10 +203,10 @@ const Property = () => {
   return (
     <OwnerLayout>
       <Container>
-      <Typography variant="h4" sx={{ align: "center", color: "white", mb: 2 }}>
+        <Typography variant="h4" sx={{ align: "center", color: "white", mb: 2 }}>
           Propiedades
         </Typography>
-        <TableContainer style={{ backgroundColor: "white" }}>
+        <TableContainer sx={{ backgroundColor: "white" }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -133,7 +219,7 @@ const Property = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {properties.map((property) => (
+              {properties?.map((property) => (
                 <TableRow key={property._id}>
                   <TableCell>{property.name}</TableCell>
                   <TableCell>{property.capacity}</TableCell>
@@ -155,89 +241,80 @@ const Property = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <Button variant="contained" onClick={toggleModal} style={{ marginBottom: "10px" }}>
+          Agregar Propiedad
+        </Button>
         <Modal open={modalOpen} onClose={toggleModal}>
           <div style={{ backgroundColor: "white", padding: "20px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-            <DialogTitle>EDITAR PROPIEDADES</DialogTitle>
+            <DialogTitle>{selectedProperty ? "Editar Propiedad" : "Agregar Propiedad"}</DialogTitle>
             <DialogContent>
-              <div>
-                <FormGroup>
-                  <FormControl>
-                    <FormLabel htmlFor="name">Nombre</FormLabel>
-                    <Input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={editedProperty?.name || ""}
-                      onChange={handlePropertyChange}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormControl>
-                    <FormLabel htmlFor="capacity">Capacidad</FormLabel>
-                    <Input
-                      type="number"
-                      id="capacity"
-                      name="capacity"
-                      value={editedProperty?.capacity || ""}
-                      onChange={handlePropertyChange}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormControl>
-                    <FormLabel htmlFor="address">Dirección</FormLabel>
-                    <Input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={editedProperty?.address || ""}
-                      onChange={handlePropertyChange}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormControl>
-                    <FormLabel htmlFor="contact">Contacto</FormLabel>
-                    <Input
-                      type="text"
-                      id="contact"
-                      name="contact"
-                      value={editedProperty?.contact || ""}
-                      onChange={handlePropertyChange}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormControl>
-                    <FormLabel htmlFor="schedule">Horario</FormLabel>
-                    <Input
-                      type="text"
-                      id="schedule"
-                      name="schedule"
-                      value={editedProperty?.schedule || ""}
-                      onChange={handlePropertyChange}
-                    />
-                  </FormControl>
-                </FormGroup>
-              </div>
+              <FormGroup>
+                <FormControl>
+                  <FormLabel>Nombre:</FormLabel>
+                  <Input type="text" name="name" value={editedProperty?.name || ''} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Capacidad:</FormLabel>
+                  <Input type="number" name="capacity" value={editedProperty?.capacity || 0} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Dirección:</FormLabel>
+                  <Input type="text" name="address" value={editedProperty?.address || ''} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Contacto:</FormLabel>
+                  <Input type="text" name="contact" value={editedProperty?.contact || ''} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Horario:</FormLabel>
+                  <Input type="text" name="schedule" value={editedProperty?.schedule || ''} onChange={handlePropertyChange} />
+                </FormControl>
+              </FormGroup>
             </DialogContent>
             <DialogActions>
-              <Button onClick={saveChanges} variant="contained" color="primary">
-                Guardar Cambios
-              </Button>
-              <Button onClick={toggleModal} variant="contained" color="secondary">
-                Cancelar
+              <Button onClick={toggleModal}>Cancelar</Button>
+              <Button onClick={selectedProperty ? saveChanges : addProperty} color="primary" variant="contained">
+                {selectedProperty ? "Guardar Cambios" : "Agregar"}
               </Button>
             </DialogActions>
           </div>
         </Modal>
+        <Snackbar open={!!successAlert} autoHideDuration={6000} onClose={() => setSuccessAlert(null)}>
+          <Alert severity="success" onClose={() => setSuccessAlert(null)}>
+            {successAlert}
+          </Alert>
+        </Snackbar>
+        <Snackbar open={!!errorAlert} autoHideDuration={6000} onClose={() => setErrorAlert(null)}>
+          <Alert severity="error" onClose={() => setErrorAlert(null)}>
+            {errorAlert}
+          </Alert>
+        </Snackbar>
       </Container>
     </OwnerLayout>
   );
 };
 
-export default Property;
+const PropertyPage = () => {
+  return (
+    <>
+      <Validation />
+      <Property />
+    </>
+  );
+};
+
+export default PropertyPage;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
