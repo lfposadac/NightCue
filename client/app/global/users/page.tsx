@@ -31,7 +31,9 @@ const Users = () => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [editedUser, setEditedUser] = useState<User | null>(null);
 
-    const toggle = () => setModal(!modal);
+    const toggle = () => {
+      setModal(!modal);
+    };
 
     useEffect(() => {
         fetch('http://localhost:3000/api/v1/user')
@@ -64,23 +66,34 @@ const handleDelete = (user: User) => {
 
   const saveChanges = () => {
     if (selectedUser) {
-      const { _id, createdAt, updatedAt, __v, ...updatedRole } = editedUser;
+      const { _id, createdAt, updatedAt,urlProfilePhoto,lastSessionDate,score,status,roleId,password, __v, ...updatedUser } = editedUser;
       fetch(`http://localhost:3000/api/v1/user/${selectedUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(selectedUser),
+        body: JSON.stringify(updatedUser),
       })
         .then((response) => response.json())
         .then((data) => {
-          setUsers((prevUsers) =>
-            prevUsers.map((user) => (user._id === data._id ? data : user))
-          );
-          toggle();
+          console.log(data);
+          if (data.status === 200) { // Verifica la estructura de la respuesta
+            setUsers((prevUsers) =>
+              prevUsers.map((user) =>
+                user._id === data.data._id ? data.data : user
+              )
+            );
+            toggle();
+          } else {
+            console.error("Error updating user:", data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating user:", error);
         });
-    }
-  };
+      }
+    };
+  
   return (
     <DashboardLayout>
       <Container className={styles.container}>

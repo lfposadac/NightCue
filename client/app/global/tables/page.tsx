@@ -28,7 +28,6 @@ type Table = {
     minimumConsumption: int;
 };
 
-
 const Tables = () => {
   const [tables, setTables] = useState<Table[]>([]);
   const [modal, setModal] = useState(false);

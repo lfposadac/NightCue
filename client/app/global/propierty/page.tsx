@@ -74,7 +74,7 @@ const Propierty = () => {
 
   const saveChanges = () => {
     if (selectedPropierty) {
-      const { _id, createdAt, updatedAt, __v, ...updatedPropierty } = editedPropierty; // Excluir las propiedades no permitidas
+      const { _id, createdAt, updatedAt, __v,userId, ...updatedPropierty } = editedPropierty; // Excluir las propiedades no permitidas
 
       fetch(`http://localhost:3000/api/v1/propierty/${selectedPropierty._id}`, {
         method: "PUT",
@@ -168,7 +168,7 @@ const Propierty = () => {
                                       <Input
                                         type="number"
                                         name="capacity"
-                                        value={selectedPropierty?.capacity || ""}
+                                        value={editedPropierty?.capacity || ""}
                                         onChange={handlePropiertyChange}
                                       />
                                     </FormGroup>
@@ -181,7 +181,7 @@ const Propierty = () => {
                                       <Input
                                         type="text"
                                         name="address"
-                                        value={selectedPropierty?.address || ""}
+                                        value={editedPropierty?.address || ""}
                                         onChange={handlePropiertyChange}
                                       />
                                       </FormGroup>
@@ -192,7 +192,7 @@ const Propierty = () => {
                                         <Input
                                           type="text"
                                           name="contact"
-                                          value={selectedPropierty?.contact || ""}
+                                          value={editedPropierty?.contact || ""}
                                           onChange={handlePropiertyChange}
                                         />
                                       </FormGroup>
@@ -203,7 +203,7 @@ const Propierty = () => {
                                   <Input
                                     type="text"
                                     name="schedule"
-                                    value={selectedPropierty?.schedule || ""}
+                                    value={editedPropierty?.schedule || ""}
                                     onChange={handlePropiertyChange}
                                   />
                                 </FormGroup>

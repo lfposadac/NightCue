@@ -64,13 +64,13 @@ const Access = () => {
 
   const saveChanges = () => {
     if (selectedAccess) {
-      const { _id,createdAt,updatedAt,__v, ...updatedFields } = selectedAccess; // Desestructurar el campo _id y crear un nuevo objeto sin el campo _id
+      const { _id,createdAt,updatedAt,__v, ...updatedAccess } = selectedAccess; // Desestructurar el campo _id y crear un nuevo objeto sin el campo _id
       fetch(`http://localhost:3000/api/v1/access/${selectedAccess._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedFields), // Enviar el nuevo objeto sin el campo _id
+        body: JSON.stringify(updatedAccess), // Enviar el nuevo objeto sin el campo _id
       })
         .then((response) => response.json())
         .then((data) => {
