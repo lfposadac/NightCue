@@ -22,9 +22,15 @@ export default function Header() {
           </Link>
           <Link
             className="text-gray-800 hover:text-gray-600"
-            href="/client/servicios"
+            href="/client/bookings"
           >
             Reservas
+          </Link>
+          <Link
+            className="text-gray-800 hover:text-gray-600"
+            href="/client/music"
+          >
+            Música
           </Link>
           <Link className="text-gray-800 hover:text-gray-600" href="/contacto">
             Salir
