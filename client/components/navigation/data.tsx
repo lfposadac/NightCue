@@ -21,23 +21,19 @@ export const linksWithToken: link[] = [
 
 export const links: link[] = [
   {
-    label: "Home",
+    label: "Inicio",
     route: "/",
   },
   {
-    label: "Login",
+    label: "Iniciar",
     route: "/login",
   },
   {
-    label: "Reserva",
-    route: "/reserva",
+    label: "Registrarse",
+    route: "/register",
   },
-  {
-    label: "Post",
-    route: "/posts",
-  },
-  {
-    label: "About",
-    route: "/about",
-  },
+  // {
+  //   label: "Acerca De",
+  //   route: "/about",
+  // },
 ];
