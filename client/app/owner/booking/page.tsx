@@ -21,13 +21,14 @@ import TextField from "@mui/material/TextField";
 import { SelectChangeEvent } from "@mui/material/Select";
 import BookIcon from "@mui/icons-material/Book";
 import Alert from "@mui/material/Alert";
+import axios from "axios";
 
 type Booking = {
   _id: string;
   idTable: string;
   userId: string;
   numberOfGuests: number;
-  status: "Espera" | "Rechazado" | "Aceptado";
+  status: "PENDING" | "CONFIRMED" | "CANCELLED";
 };
 
 type EditedBookings = Record<string, Partial<Booking>>;
@@ -37,6 +38,10 @@ const Bookings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [editedBookings, setEditedBookings] = useState<EditedBookings>({});
+  console.log(
+    "🚀 ~ file: page.tsx:40 ~ Bookings ~ editedBookings:",
+    editedBookings
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -63,9 +68,12 @@ const Bookings = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setBookings(bookings.filter((booking) => booking._id !== data.data._id));
+        setBookings(
+          bookings.filter((booking) => booking._id !== data.data._id)
+        );
         setEditedBookings((prevEditedBookings) => {
-          const { [data.data._id]: deletedBooking, ...rest } = prevEditedBookings;
+          const { [data.data._id]: deletedBooking, ...rest } =
+            prevEditedBookings;
           return rest;
         });
       });
@@ -82,24 +90,38 @@ const Bookings = () => {
     }));
   };
 
-  const handleStatusChange = (
-    e: SelectChangeEvent<"Espera" | "Rechazado" | "Aceptado">,
+  const handleStatusChange = async (
+    e: SelectChangeEvent<"PENDING" | "CONFIRMED" | "CANCELLED">,
     bookingId: string
   ) => {
-    setEditedBookings((prevEditedBookings) => ({
-      ...prevEditedBookings,
-      [bookingId]: {
-        ...prevEditedBookings[bookingId],
-        status: e.target.value as "Espera" | "Rechazado" | "Aceptado",
-      },
-    }));
+    const { value } = e.target;
+    const res = await axios.put(
+      `http://localhost:3000/api/v1/booking/${bookingId}`,
+      {
+        status: value,
+      }
+    );
+    const { status } = res?.data?.data;
+
+    if (!status) return;
+
+    const booking = bookings.find((booking) => {
+      return booking._id === bookingId;
+    });
+    if (booking) {
+      setBookings((prevBookings) => {
+        const index = prevBookings.indexOf(booking);
+        const newBookings = [...prevBookings];
+        newBookings[index] = { ...booking, status };
+        return newBookings;
+      });
+    }
   };
 
   const saveChanges = () => {
     if (selectedBooking) {
-      const { _id, createdAt, updatedAt, __v, ...updatedBooking } = editedBookings[
-        selectedBooking._id
-      ] as Booking; // Excluir las propiedades no permitidas
+      const { _id, createdAt, updatedAt, __v, ...updatedBooking } =
+        editedBookings[selectedBooking._id] as Booking; // Excluir las propiedades no permitidas
       fetch(`http://localhost:3000/api/v1/booking/${selectedBooking._id}`, {
         method: "PUT",
         headers: {
@@ -165,34 +187,43 @@ const Bookings = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bookings.map((booking) => (
-                <TableRow key={booking._id}>
-                  <TableCell>
-                    <strong>{booking.idTable}</strong>
-                  </TableCell>
-                  <TableCell>{booking.userId}</TableCell>
-                  <TableCell>{booking.numberOfGuests}</TableCell>
-                  <TableCell>
-                    <Select
-                      value={editedBookings[booking._id]?.status || ""}
-                      onChange={(e) => handleStatusChange(e, booking._id)}
-                      aria-label="booking status"
-                    >
-                      <MenuItem value="Espera">Espera</MenuItem>
-                      <MenuItem value="Rechazado">Rechazado</MenuItem>
-                      <MenuItem value="Aceptado">Aceptado</MenuItem>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="contained" onClick={() => handleEdit(booking)}>
-                      Editar
-                    </Button>
-                    <Button variant="contained" color="error" onClick={() => handleDelete(booking)}>
-                      Eliminar
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {bookings.map((booking) => {
+                return (
+                  <TableRow key={booking._id}>
+                    <TableCell>
+                      <strong>{booking.idTable}</strong>
+                    </TableCell>
+                    <TableCell>{booking.userId}</TableCell>
+                    <TableCell>{booking.numberOfGuests}</TableCell>
+                    <TableCell>
+                      <Select
+                        value={booking?.status}
+                        onChange={(e) => handleStatusChange(e, booking._id)}
+                        aria-label="booking status"
+                      >
+                        <MenuItem value="PENDING">Pendiente</MenuItem>
+                        <MenuItem value="CONFIRMED">Confirmado</MenuItem>
+                        <MenuItem value="CANCELLED">Cancelado</MenuItem>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleEdit(booking)}
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleDelete(booking)}
+                      >
+                        Eliminar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -226,7 +257,9 @@ const Bookings = () => {
                   name="numberOfGuests"
                   label="Número de Invitados"
                   type="number"
-                  value={editedBookings[selectedBooking._id]?.numberOfGuests || ""}
+                  value={
+                    editedBookings[selectedBooking._id]?.numberOfGuests || ""
+                  }
                   onChange={(e) => handleBookingChange(e, selectedBooking._id)}
                   fullWidth
                   margin="dense"
@@ -234,7 +267,13 @@ const Bookings = () => {
                 />
               </FormGroup>
             )}
-            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
               <Button variant="contained" onClick={() => setModalOpen(false)}>
                 Cancelar
               </Button>
@@ -250,37 +289,3 @@ const Bookings = () => {
 };
 
 export default Bookings;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
