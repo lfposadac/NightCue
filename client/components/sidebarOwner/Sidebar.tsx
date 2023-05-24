@@ -42,6 +42,10 @@ export default function Sidebar() {
     setIsSidebarOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  };
+
   return (
     <div>
       <HamburgerButton onClick={toggleSidebar}>
@@ -127,7 +131,11 @@ export default function Sidebar() {
               <ListItemText primary="Botón de panico" />
             </ListItem>
           </List>
-          <ListItem button onClick={handleMenuItemClick}>
+          <ListItem 
+          button 
+          component={Link}
+          href="/login" 
+          onClick={handleLogout}>
             <div>
               <ExitToAppIcon /> {/* Icono genérico de salida */}
             </div>
