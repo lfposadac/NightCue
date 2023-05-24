@@ -105,7 +105,7 @@ export default function Sidebar() {
             <ListItem
               button
               component={Link}
-              href="/owner"
+              href="/owner/music"
               onClick={handleMenuItemClick}
             >
               <div>
@@ -117,6 +117,8 @@ export default function Sidebar() {
             <List>
             <ListItem
               button
+              component={Link}
+              href="/owner/alert"
               onClick={handleMenuItemClick}
             >
               <div>

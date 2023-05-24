@@ -67,11 +67,13 @@ const Dashboard: React.FC = () => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={4}>
+          <Link href="/owner/music" passHref>
               <InfoContainer>
                 <ReportProblemIcon fontSize="large" />
                 <Typography variant="h4">BOTON DE ALERTA</Typography>
                 <Typography variant="body1">ALERTA.</Typography>
               </InfoContainer>
+          </Link>
           </Grid>
           <Grid item xs={12} sm={4}>
           <Link href="/owner/music" passHref>
