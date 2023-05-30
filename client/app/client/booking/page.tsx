@@ -86,7 +86,7 @@ export default function Bookings() {
       };
 
       const response = await axios.post(
-        `http://localhost:3000/api/v1/booking/${reservationId}`,
+        `http://localhost:3000/api/v1/booking/`,
         data
       );
       console.log(response);

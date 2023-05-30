@@ -38,10 +38,6 @@ const Bookings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [editedBookings, setEditedBookings] = useState<EditedBookings>({});
-  console.log(
-    "🚀 ~ file: page.tsx:40 ~ Bookings ~ editedBookings:",
-    editedBookings
-  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
