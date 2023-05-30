@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <Jumbotron />
       <CarouselCl />
-      <Propierties />
+      {/* <Propierties /> */}
     </>
   );
 }

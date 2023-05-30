@@ -16,7 +16,7 @@ export default function HomePage() {
           <title className={styles.tittle}>Discoteca - Reservas</title>
         </Head>
         <main>
-          <h1 className={styles.title}>Bienvenidos a la discoteca</h1>
+          <h1 className={styles.title}>Bienvenidos</h1>
           <p className={styles.subtittle}>
             Reserva tu mesa para disfrutar de una noche inolvidable
           </p>
