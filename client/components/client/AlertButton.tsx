@@ -10,7 +10,7 @@ export default function AlertButton() {
   const [properties, setProperties] = useState({});
   const [alert, setAlert] = useState({
     userId: "",
-    propiertyId: "",
+    propiertyId: "64554a0c37a7c8969c91e9c7",
     message: "",
   });
 
@@ -18,6 +18,10 @@ export default function AlertButton() {
     const { value } = e.target;
     setAlert((prev) => ({ ...prev, propiertyId: value }));
   };
+
+  const setMessageAlert = (message) => {
+    setAlert((prev) => ({ ...prev, message }));
+  }
 
   const handleMessageChange = (e) => {
     const { value } = e.target;
@@ -101,25 +105,21 @@ export default function AlertButton() {
               </div>
 
               <div className="relative flex-auto p-4" data-te-modal-body-ref>
+                <div>
+                  <span>Mensajes Predeterminados:</span>
+                  <div className="flex">
+                  <button className="bg-red-900 text-gray-100 p-2 ml-1" onClick={() => setMessageAlert("Agresión")} >Agresión</button>
+                  <button className="bg-red-900 text-gray-100 p-2 ml-1" onClick={() => setMessageAlert("Robo")}>Robo</button>
+                  <button className="bg-red-900 text-gray-100 p-2 ml-1" onClick={() => setMessageAlert("Urgencia")}>Urgencia</button>
+                  </div>
+                </div>
+
                 <form className="flex flex-col justify-end items-center">
-                  <label>Selecciona El Establecimiento</label>
-                  <select
-                    value={alert?.propiertyId}
-                    data-te-select-init
-                    onChange={handlePropiertyChange}
-                    className="border-2 border-gray-100"
-                  >
-                    {Object.keys(properties).map((key) => (
-                      <option key={key} value={key}>
-                        {properties?.[key].name}
-                      </option>
-                    ))}
-                  </select>
 
                   <div className="relative my-5" data-te-input-wrapper-init>
                     <textarea
                       className="peer block min-h-[auto] w-full rounded border-2 border-gray-100  bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-non [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                      rows={3}
+                      // rows={3}
                       placeholder="Your message"
                       onChange={handleMessageChange}
                       value={alert.message}

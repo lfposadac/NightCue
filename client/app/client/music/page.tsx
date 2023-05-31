@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function Music() {
   const [properties, setProperties] = useState({});
-  const [propierty, setProperty] = useState("");
+  const [propierty, setPropierty] = useState("64554a0c37a7c8969c91e9c7");
   const [music, setMusic] = useState([]);
 
   const handlePropiertyChange = (e) => {
@@ -55,22 +55,6 @@ export default function Music() {
     <div className="flex flex-col items-center min-h-[100vh] pt-5">
       <CreateMusic addMusic={addMusic} />
       <h1 className="text-3xl">Aquí Puedes Ver Las Ultimas Canciones</h1>
-
-      <form>
-        <label>Selecciona El Establecimiento</label>
-        <select
-          value={propierty}
-          data-te-select-init
-          onChange={handlePropiertyChange}
-          className="border-2 border-gray-100"
-        >
-          {Object.keys(properties).map((key) => (
-            <option key={key} value={key}>
-              {properties?.[key].name}
-            </option>
-          ))}
-        </select>
-      </form>
 
       <div className="flex flex-wrap gap-4 justify-center">
         {music.map((music, i) => (

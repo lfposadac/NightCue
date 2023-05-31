@@ -95,25 +95,27 @@ export default function Alert() {
         </form>
 
         <div className="flex flex-wrap gap-4 justify-center">
-          {alert.map((alert, i) => (
-            <div
-              key={i}
-              className="block rounded-lg my-3 bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
-            >
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800">
-                {alert?.name}
-              </h5>
-              <p className="mb-4 text-base text-neutral-600">
-                {user?.[alert?.userId]?.name}
-              </p>
-              <button
-                onClick={() => handleDelete(music._id)}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+          {alert.map((alert, i) => {
+            return (
+              <div
+                key={i}
+                className="block rounded-lg my-3 bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
               >
-                Eliminar
-              </button>
-            </div>
-          ))}
+                <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800">
+                  mensaje: {alert?.message}
+                </h5>
+                <p className="mb-4 text-base text-neutral-600">
+                  Usuario: {user?.[alert?.userId]?.name}
+                </p>
+                <button
+                  onClick={() => handleDelete(music._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                >
+                  Eliminar
+                </button>
+              </div>
+            )
+          })}
         </div>
       </div>
     </OwnerLayout>

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export default function Bookings() {
   const [propierties, setPropierties] = useState({});
   const [tables, setTables] = useState([]);
-  const [propierty, setPropierty] = useState("");
+  const [propierty, setPropierty] = useState("64554a0c37a7c8969c91e9c7");
   const [selectedTable, setSelectedTable] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(0);
@@ -86,7 +86,7 @@ export default function Bookings() {
       };
 
       const response = await axios.post(
-        `http://localhost:3000/api/v1/booking/${reservationId}`,
+        `http://localhost:3000/api/v1/booking/`,
         data
       );
       console.log(response);
@@ -118,24 +118,8 @@ export default function Bookings() {
   };
 
   return (
-    <div className="flex flex-col justify-end items-center min-h-screen">
-      <h1 className="text-3xl">Establecimiento donde deseas reservar</h1>
-      <form>
-        <div className="flex flex-wrap justify-center mt-4">
-          {Object.keys(propierties).map((key) => (
-            <button
-              key={key}
-              value={key}
-              onClick={handlePropiertyChange}
-              className={`${
-                propierty === key ? "selected-button" : ""
-              } bg-blue-500 text-white py-2 px-4 m-2`}
-            >
-              {propierties?.[key]?.name}
-            </button>
-          ))}
-        </div>
-      </form>
+    <div className="flex flex-col justify-start pt-5 items-center min-h-screen">
+      <span className="bg-red-900 text-gray-100 p-2 text-xl" >¡Todos los jueves son NO COVER!</span>
       <div className="container">
         <div className="form-container">
           <h2 className="text-2xl mt-6 text-center">Selecciona una Mesa</h2>
@@ -197,7 +181,7 @@ export default function Bookings() {
           disabled={
             !propierty || !selectedTable || !selectedDate || numberOfGuests <= 0
           }
-          className="btn-reservar"
+          className="bg-red-900 p-3 text-white rounded-lg"
         >
           Reservar
         </button>

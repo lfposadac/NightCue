@@ -42,14 +42,14 @@ const Validation = () => {
 
   const decode = jwtDecode(token);
   console.log(decode);
-  const { userId } = decode;
+  const { roelId } = decode;
 
-  if (!userId) {
+  if (!roelId) {
     localStorage.removeItem("token");
     window.location.href = "/login";
   }
 
-  if (userId !== "64653384b532c1635f84cefb") {
+  if (roelId !== "6427415c4aadf86e34b2cba8") {
     localStorage.removeItem("token");
     window.location.href = "/login";
   }
@@ -248,7 +248,7 @@ const Property = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button variant="contained" onClick={toggleModal} style={{ marginBottom: "10px" }}>
+        <Button variant="contained" onClick={toggleModal} style={{ marginBottom: "10px", marginTop: "10px" }} className="mt-6">
           Agregar Propiedad
         </Button>
         <Modal open={modalOpen} onClose={toggleModal}>

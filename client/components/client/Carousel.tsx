@@ -49,9 +49,14 @@ export default function CarouselCl() {
             backfaceVisibility: "hidden",
           }}
         >
-          <img src="/images/evento1.jpeg" className="block w-full" alt="..." />
+          <img src="/images/image1.jpg" className="block w-full" alt="..." style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            width: "100%",
+            maxHeight: "calc(100vh - 3rem)"
+          }}  />
           <div className="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
-            <h5 className="text-xl">La Catedral</h5>
+            <h5 className="text-xl">La Romana</h5>
             <p>Los Favoritos</p>
           </div>
         </div>
@@ -62,7 +67,12 @@ export default function CarouselCl() {
             backfaceVisibility: "hidden",
           }}
         >
-          <img src="/images/evento2.jpeg" className="block w-full" alt="..." />
+          <img src="/images/image2.jpg" className="block w-full" alt="..." style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            width: "100%",
+            maxHeight: "calc(100vh - 3rem)"
+          }} />
           <div className="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
             <h5 className="text-xl">La Romana</h5>
             <p>Perreo</p>
@@ -75,9 +85,14 @@ export default function CarouselCl() {
             backfaceVisibility: "hidden",
           }}
         >
-          <img src="/images/evento3.jpeg" className="block w-full" alt="..." />
+          <img src="/images/image3.jpg" className="block w-full" alt="..." style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            width: "100%",
+            maxHeight: "calc(100vh - 3rem)"
+          }} />
           <div className="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
-            <h5 className="text-xl">Perro Negro</h5>
+            <h5 className="text-xl">La Romana</h5>
             <p>Perreo</p>
           </div>
         </div>

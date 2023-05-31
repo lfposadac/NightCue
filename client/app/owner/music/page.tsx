@@ -12,6 +12,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import jwtDecode from "jwt-decode";
+import Image from "next/image";
 
 export default function Music() {
   const [properties, setProperties] = useState({});
@@ -142,22 +143,18 @@ export default function Music() {
 
         <div className="flex flex-wrap gap-4 justify-center">
           {music.map((music, i) => (
-            <div
-              key={i}
-              className="block rounded-lg my-3 bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]"
-            >
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800">
-                {music?.name}
+            <div key={i} className="block rounded-lg my-3 bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col items-center">
+              <Image src="/images/cd.webp" width={150} height={150} />
+              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 ">
+                Canción: {music?.name}
               </h5>
-              <p className="mb-4 text-base text-neutral-600">
-                {user?.[music?.userId]?.name}
-              </p>
-              <button
-                onClick={() => handleDelete(music._id)}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-              >
-                Eliminar
-              </button>
+              {
+                user?.[music?.userId]?.name && (
+                  <p className="mb-4 text-base text-neutral-600 ">
+                  Cliente: {user?.[music?.userId]?.name}
+                  </p>
+                )
+              }
             </div>
           ))}
         </div>
