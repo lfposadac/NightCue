@@ -23,6 +23,8 @@ import {
   Alert,
 } from "@mui/material";
 import jwtDecode from "jwt-decode";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 
 type Property = {
   _id: string;
@@ -34,28 +36,16 @@ type Property = {
   schedule: string;
 };
 
-const Validation = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    window.location.href = "/login";
-  }
-
-  const decode = jwtDecode(token);
-  console.log(decode);
-  const { roelId } = decode;
-
-  if (!roelId) {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  }
-
-  if (roelId !== "6427415c4aadf86e34b2cba8") {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  }
-
-  return <></>;
-};
+const theme = createTheme({
+  palette: {
+    text: {
+      primary: "#ffffff", // Color del texto blanco
+    },
+    background: {
+      default: "#000000", // Color de fondo negro
+    },
+  },
+});
 
 const Property = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -208,12 +198,13 @@ const Property = () => {
   };
 
   return (
+  <ThemeProvider theme={theme}>
     <OwnerLayout>
       <Container>
         <Typography variant="h4" sx={{ align: "center", color: "white", mb: 2 }}>
           Propiedades
         </Typography>
-        <TableContainer sx={{ backgroundColor: "white" }}>
+        <TableContainer sx={{ backgroundColor: "black" }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -235,10 +226,10 @@ const Property = () => {
                   <TableCell>{property.schedule}</TableCell>
                   <TableCell>
                     <div>
-                      <Button variant="outlined" onClick={() => handleEdit(property)}>
+                      <Button variant="contained" onClick={() => handleEdit(property)}>
                         Editar
                       </Button>
-                      <Button variant="outlined" onClick={() => handleDelete(property)}>
+                      <Button variant="contained" color= "error" onClick={() => handleDelete(property)}>
                         Eliminar
                       </Button>
                     </div>
@@ -248,12 +239,47 @@ const Property = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button variant="contained" onClick={toggleModal} style={{ marginBottom: "10px", marginTop: "10px" }} className="mt-6">
+        <Button variant="contained" onClick={() => handlePropertyChangeAdd} style={{ marginBottom: "10px", marginTop: "10px" }} className="mt-6">
           Agregar Propiedad
         </Button>
         <Modal open={modalOpen} onClose={toggleModal}>
-          <div style={{ backgroundColor: "white", padding: "20px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+          <div style={{ backgroundColor: "black", padding: "20px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
             <DialogTitle>{selectedProperty ? "Editar Propiedad" : "Editar Propiedad"}</DialogTitle>
+            <DialogContent>
+              <FormGroup>
+                <FormControl>
+                  <FormLabel>Nombre:</FormLabel>
+                  <Input type="text" name="name" value={editedProperty?.name || ''} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Capacidad:</FormLabel>
+                  <Input type="number" name="capacity" value={editedProperty?.capacity || 0} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Dirección:</FormLabel>
+                  <Input type="text" name="address" value={editedProperty?.address || ''} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Contacto:</FormLabel>
+                  <Input type="text" name="contact" value={editedProperty?.contact || ''} onChange={handlePropertyChange} />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Horario:</FormLabel>
+                  <Input type="text" name="schedule" value={editedProperty?.schedule || ''} onChange={handlePropertyChange} />
+                </FormControl>
+              </FormGroup>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={toggleModal}>Cancelar</Button>
+              <Button onClick={selectedProperty ? saveChanges : addProperty} color="primary" variant="contained">
+                {selectedProperty ? "Guardar Cambios" : "Agregar"}
+              </Button>
+            </DialogActions>
+          </div>
+        </Modal>
+        <Modal open={modalOpen} onClose={toggleModal}>
+          <div style={{ backgroundColor: "black", padding: "20px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+            <DialogTitle>{createdProperty ? "Agregar Propiedad" : "Agregar Propiedad"}</DialogTitle>
             <DialogContent>
               <FormGroup>
                 <FormControl>
@@ -298,13 +324,14 @@ const Property = () => {
         </Snackbar>
       </Container>
     </OwnerLayout>
+  </ThemeProvider>
   );
 };
 
 const PropertyPage = () => {
   return (
     <>
-      <Validation />
+    
       <Property />
     </>
   );

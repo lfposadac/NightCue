@@ -22,6 +22,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import BookIcon from "@mui/icons-material/Book";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 type Booking = {
   _id: string;
@@ -31,6 +32,26 @@ type Booking = {
   status: "PENDING" | "CONFIRMED" | "CANCELLED";
 };
 
+type User = {
+  _id: string;
+  name: string;
+};
+type Table = {
+  _id: string;
+  type: string;
+};
+
+const theme = createTheme({
+  palette: {
+    text: {
+      primary: "#ffffff", // Color del texto blanco
+    },
+    background: {
+      default: "#000000", // Color de fondo negro
+    },
+  },
+});
+
 type EditedBookings = Record<string, Partial<Booking>>;
 
 const Bookings = () => {
@@ -39,6 +60,8 @@ const Bookings = () => {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [editedBookings, setEditedBookings] = useState<EditedBookings>({});
   const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<Record<string, User>>({});
+  const [table, setTable] = useState<Record<string, Table>>({});
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/booking")
@@ -50,6 +73,26 @@ const Bookings = () => {
           initialEditedBookings[booking._id] = { ...booking };
         });
         setEditedBookings(initialEditedBookings);
+
+        fetch("http://localhost:3000/api/v1/user")
+          .then((response) => response.json())
+          .then((userData) => {
+            const userMap: Record<string, User> = {};
+            userData.data.forEach((prop: User) => {
+              userMap[prop._id] = prop;
+            });
+            setUser(userMap);
+          });
+  
+        fetch("http://localhost:3000/api/v1/table")
+          .then((response) => response.json())
+          .then((tableData) => {
+            const tableMap: Record<string, Table> = {};
+            tableData.data.forEach((prop: Table) => {
+              tableMap[prop._id] = prop;
+            });
+            setTable(tableMap);
+          });
       });
   }, []);
 
@@ -149,6 +192,7 @@ const Bookings = () => {
   };
 
   return (
+  <ThemeProvider theme={theme}>
     <OwnerLayout>
       <Container>
         <Box
@@ -171,13 +215,13 @@ const Bookings = () => {
             {error}
           </Alert>
         )}
-        <TableContainer sx={{ bgcolor: "white" }}>
+        <TableContainer sx={{ bgcolor: "black" }}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>idTable</TableCell>
-                <TableCell>userId</TableCell>
-                <TableCell>numberOfGuests</TableCell>
+                <TableCell>Mesa</TableCell>
+                <TableCell>Usuario</TableCell>
+                <TableCell>Invitados</TableCell>
                 <TableCell>status</TableCell>
                 <TableCell>Acciones</TableCell>
               </TableRow>
@@ -187,9 +231,9 @@ const Bookings = () => {
                 return (
                   <TableRow key={booking._id}>
                     <TableCell>
-                      <strong>{booking.idTable}</strong>
+                      <strong>{table?.[booking.idTable]?.type}</strong>
                     </TableCell>
-                    <TableCell>{booking.userId}</TableCell>
+                    <TableCell>{user?.[booking.userId]?.name}</TableCell>
                     <TableCell>{booking.numberOfGuests}</TableCell>
                     <TableCell>
                       <Select
@@ -197,9 +241,9 @@ const Bookings = () => {
                         onChange={(e) => handleStatusChange(e, booking._id)}
                         aria-label="booking status"
                       >
-                        <MenuItem value="PENDING">Pendiente</MenuItem>
-                        <MenuItem value="CONFIRMED">Confirmado</MenuItem>
-                        <MenuItem value="CANCELLED">Cancelado</MenuItem>
+                        <MenuItem color="white" value="PENDING">Pendiente</MenuItem>
+                        <MenuItem color= "white" value="CONFIRMED">Confirmado</MenuItem>
+                        <MenuItem color="white" value="CANCELLED">Cancelado</MenuItem>
                       </Select>
                     </TableCell>
                     <TableCell>
@@ -240,7 +284,7 @@ const Bookings = () => {
             {selectedBooking && (
               <FormGroup sx={{ width: "100%", mb: 2 }}>
                 <TextField
-                  name="idTable"
+                  name="idtable"
                   label="idTable"
                   value={editedBookings[selectedBooking._id]?.idTable || ""}
                   onChange={(e) => handleBookingChange(e, selectedBooking._id)}
@@ -281,6 +325,7 @@ const Bookings = () => {
         </Modal>
       </Container>
     </OwnerLayout>
+  </ThemeProvider>
   );
 };
 

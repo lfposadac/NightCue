@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
               </Typography>
             </WelcomeContainer>
           </Grid>
-          {/* <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
             <Link href="/owner/table" passHref>
               <InfoContainer>
                 <ChairIcon fontSize="large" />
@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
                 <Typography variant="body1">Información sobre las mesas en el sistema.</Typography>
               </InfoContainer>
             </Link>
-          </Grid> */}
+  </Grid> */}
           <Grid item xs={12} sm={4}>
             <Link href="/owner/booking" passHref>
               <InfoContainer>
@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
             </Link>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Link href="/owner/music" passHref>
+            <Link href="/owner/alert" passHref>
               <InfoContainer>
                 <ReportProblemIcon fontSize="large" />
                 <Typography variant="h4">BOTON DE ALERTA</Typography>

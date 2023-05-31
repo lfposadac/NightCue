@@ -125,7 +125,7 @@ export default function Music() {
 
         <form>
           <label className="text-white text-xl">
-            Selecciona El Establecimiento
+            Selecciona el establecimiento
           </label>
           <select
             value={propierty}
@@ -155,6 +155,12 @@ export default function Music() {
                   </p>
                 )
               }
+               <button
+                  onClick={() => handleDelete(music._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                >
+                  Eliminar
+                </button>
             </div>
           ))}
         </div>

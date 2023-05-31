@@ -71,6 +71,15 @@ export default function Alert() {
     getData();
   }, []);
 
+  const handleDelete = async (alertId) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/v1/alert/${alertId}`);
+      // Realiza alguna lógica adicional si es necesario
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <OwnerLayout>
       <div className="flex flex-col items-center min-h-[100vh] pt-5">
@@ -78,7 +87,7 @@ export default function Alert() {
 
         <form>
           <label className="text-white text-xl">
-            Selecciona El Establecimiento
+            Selecciona el establecimiento
           </label>
           <select
             value={propierty}
@@ -108,7 +117,7 @@ export default function Alert() {
                   Usuario: {user?.[alert?.userId]?.name}
                 </p>
                 <button
-                  onClick={() => handleDelete(music._id)}
+                  onClick={() => handleDelete(alert._id)}
                   className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
                 >
                   Eliminar
