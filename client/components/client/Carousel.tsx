@@ -1,5 +1,5 @@
 "use client";
-import "tw-elements";
+// import "tw-elements";
 import { Carousel, initTE } from "tw-elements";
 initTE({ Carousel });
 

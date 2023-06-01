@@ -13,6 +13,7 @@ export default function AlertButton() {
     propiertyId: "64554a0c37a7c8969c91e9c7",
     message: "",
   });
+  console.log("🚀 ~ file: AlertButton.tsx:16 ~ AlertButton ~ alert:", alert)
 
   const handlePropiertyChange = (e) => {
     const { value } = e.target;
